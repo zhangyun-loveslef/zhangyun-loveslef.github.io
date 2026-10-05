@@ -165,20 +165,11 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
     <div class="sec-head">
       <div class="sec-eyebrow">About</div>
       <h2 class="sec-title">关于我</h2>
-      <p class="sec-desc">把你的个人简介写在这里，两三段即可，真诚比华丽更重要。</p>
+      <p class="sec-desc" id="aboutDesc"></p>
     </div>
     <div class="about-grid">
-      <div class="about-text">
-        <p>第一段：简单介绍你是谁、在做什么。例如——「我是一名工程师，白天和硬件与代码打交道，晚上喜欢读书、跑步、偶尔写点随笔。」（这段文字只是占位示例，请替换成你自己的介绍。）</p>
-        <p>第二段：可以聊聊你的兴趣、你正在做的事，或者你相信什么。让读到的人觉得认识了你这个人，而不只是一份简历。</p>
-        <p>第三段（可选）：补充任何想说的话，或邀请读者做某件事——关注你的作品、给你写信、一起喝杯咖啡。</p>
-      </div>
-      <div class="facts">
-        <div class="fact"><span class="k">工作</span><span class="v">你的职业 / 领域</span></div>
-        <div class="fact"><span class="k">常做</span><span class="v">你的日常或兴趣</span></div>
-        <div class="fact"><span class="k">坐标</span><span class="v">所在城市</span></div>
-        <div class="fact"><span class="k">喜欢</span><span class="v">几件小事</span></div>
-      </div>
+      <div class="about-text" id="aboutText"></div>
+      <div class="facts" id="aboutFacts"></div>
     </div>
   </section>
 
@@ -189,7 +180,7 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
       <h2 class="sec-title">生活随笔</h2>
       <p class="sec-desc">记录生活里的一些碎片与想法。点击任意一篇可展开阅读。</p>
     </div>
-    <div class="note">以下 4 篇为示例文章，方便你看到排版效果。替换时直接修改页面底部 <code>&lt;script&gt;</code> 里的 <code>ESSAYS</code> 数组即可。</div>
+    <div class="note">以下为示例文章。随笔存放在 <code>essays/*.md</code>（可用 Typora 编辑），改完后运行 <code>build.bat</code> 重新生成页面即可。详细说明见 README。</div>
     <div class="filter" id="filter" role="tablist" aria-label="按标签筛选随笔"></div>
     <div class="essay-list" id="essayList"></div>
   </section>
@@ -241,7 +232,8 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
 
 
 <script>
-/* ============ 可编辑配置：把下面的内容替换成你自己的 ============ */
+/* ===== SITE-DATA-START ===== */
+/* 以下数据由 build.py 从 essays/*.md 与 site-config.json 自动生成，请勿手动修改 */
 var PROFILE = {
   name: "你的名字",
   monogram: "名",
@@ -253,58 +245,42 @@ var CONTACT = {
   github: "github.com/你的用户名",
   site: "https://你的域名"
 };
-
-/* ============ 随笔数据：每篇含 title/date/tag/excerpt/content ============ */
+var ABOUT = {
+  desc: "把你的个人简介写在这里，两三段即可，真诚比华丽更重要。",
+  paragraphs: ["第一段：简单介绍你是谁、在做什么。例如——「我是一名工程师，白天和硬件与代码打交道，晚上喜欢读书、跑步、偶尔写点随笔。」（这段文字只是占位示例，请替换成你自己的介绍。）", "第二段：可以聊聊你的兴趣、你正在做的事，或者你相信什么。让读到的人觉得认识了你这个人，而不只是一份简历。", "第三段（可选）：补充任何想说的话，或邀请读者做某件事——关注你的作品、给你写信、一起喝杯咖啡。"],
+  facts: [{k:"工作",v:"你的职业 / 领域"}, {k:"常做",v:"你的日常或兴趣"}, {k:"坐标",v:"所在城市"}, {k:"喜欢",v:"几件小事"}]
+};
 var ESSAYS = [
   {
     title: "慢下来的时光",
     date: "2026-09-20",
     tag: "生活",
     excerpt: "周末把手机丢在一边，去菜市场慢慢挑了两把青菜，回来煮了碗面。忽然发现，慢下来以后，时间的质感完全不同。",
-    content: [
-      "周末把手机丢在一边，去菜市场慢慢挑了两把青菜，回来煮了碗面。忽然发现，慢下来以后，时间的质感完全不同。",
-      "我们总被催促着快一点、再快一点，可真正值得回味的东西，往往都发生在慢里。一顿认真做的饭，一次没有目的的散步，一段不被打断的对话。",
-      "这不是什么了不起的发现，但我想把它记下来，提醒自己：生活不在别处，就在这些被忽略的片刻里。",
-      "（本文为示例文章，请在下方数组中替换为你的随笔。）"
-    ]
+    content: ["周末把手机丢在一边，去菜市场慢慢挑了两把青菜，回来煮了碗面。忽然发现，慢下来以后，时间的质感完全不同。", "我们总被催促着快一点、再快一点，可真正值得回味的东西，往往都发生在慢里。一顿认真做的饭，一次没有目的的散步，一段不被打断的对话。", "这不是什么了不起的发现，但我想把它记下来，提醒自己：生活不在别处，就在这些被忽略的片刻里。", "（本文为示例文章，用 Typora 打开本文件替换成你自己的随笔即可。）"]
   },
   {
     title: "深夜里的代码",
     date: "2026-08-14",
     tag: "工作",
     excerpt: "凌晨一点，盯着屏幕上一行怎么都不对的数据。调试的尽头往往不是技术问题，而是耐心与自己的和解。",
-    content: [
-      "凌晨一点，盯着屏幕上一行怎么都不对的数据。调试的尽头往往不是技术问题，而是耐心与自己的和解。",
-      "做了很多年，我越来越相信：写代码这件事，七分是逻辑，三分是心性。再难的 bug，只要肯静下来一行行拆，总会有答案。",
-      "真正难的，是在持续失败的时候还愿意保持冷静，把每一次报错当成线索，而不是当成打击。",
-      "（本文为示例文章，请在下方数组中替换为你的随笔。）"
-    ]
+    content: ["凌晨一点，盯着屏幕上一行怎么都不对的数据。调试的尽头往往不是技术问题，而是耐心与自己的和解。", "做了很多年，我越来越相信：写代码这件事，七分是逻辑，三分是心性。再难的 bug，只要肯静下来一行行拆，总会有答案。", "真正难的，是在持续失败的时候还愿意保持冷静，把每一次报错当成线索，而不是当成打击。", "（本文为示例文章，用 Typora 打开本文件替换成你自己的随笔即可。）"]
   },
   {
     title: "城市与远山",
     date: "2026-06-08",
     tag: "旅行",
     excerpt: "偶尔从高楼的缝隙里看见远处的山，心里会松一口气。原来在这个城市里，一直有一片山等着我。",
-    content: [
-      "偶尔从高楼的缝隙里看见远处的山，心里会松一口气。原来在这个城市里，一直有一片山等着我。",
-      "趁着假期去了趟山里。没有信号，没有日程，只有风、树影和走不完的路。走到半山腰的时候，忽然觉得一年里所有的疲惫都被卸下了。",
-      "回来后我常想，人大概需要时不时离开一下，才能更清楚地知道自己为什么出发。",
-      "（本文为示例文章，请在下方数组中替换为你的随笔。）"
-    ]
+    content: ["偶尔从高楼的缝隙里看见远处的山，心里会松一口气。原来在这个城市里，一直有一片山等着我。", "趁着假期去了趟山里。没有信号，没有日程，只有风、树影和走不完的路。走到半山腰的时候，忽然觉得一年里所有的疲惫都被卸下了。", "回来后我常想，人大概需要时不时离开一下，才能更清楚地知道自己为什么出发。", "（本文为示例文章，用 Typora 打开本文件替换成你自己的随笔即可。）"]
   },
   {
     title: "读书记",
     date: "2026-04-02",
     tag: "阅读",
     excerpt: "书读到一半合上，发呆很久。好的文字从不急着告诉你答案，它只是在你心里种下一颗种子，等它自己发芽。",
-    content: [
-      "书读到一半合上，发呆很久。好的文字从不急着告诉你答案，它只是在你心里种下一颗种子，等它自己发芽。",
-      "这一年读的书不多，但每一本都留下了点什么。有的改变了我的想法，有的只是陪伴我度过了一段安静的时间。",
-      "我慢慢不再追求「读完多少本」，而是更在意「被哪一句打动」。阅读的意义，大概就在这里。",
-      "（本文为示例文章，请在下方数组中替换为你的随笔。）"
-    ]
+    content: ["书读到一半合上，发呆很久。好的文字从不急着告诉你答案，它只是在你心里种下一颗种子，等它自己发芽。", "这一年读的书不多，但每一本都留下了点什么。有的改变了我的想法，有的只是陪伴我度过了一段安静的时间。", "我慢慢不再追求「读完多少本」，而是更在意「被哪一句打动」。阅读的意义，大概就在这里。", "（本文为示例文章，用 Typora 打开本文件替换成你自己的随笔即可。）"]
   }
 ];
+/* ===== SITE-DATA-END ===== */
 
 /* ============ 渲染 ============ */
 function renderFilters(){
@@ -434,10 +410,18 @@ function applyProfile(){
   document.querySelector(".hero .lead").textContent = PROFILE.lead;
   document.title = PROFILE.name + " · 个人主页";
 }
+function applyAbout(){
+  document.getElementById("aboutDesc").textContent = ABOUT.desc;
+  document.getElementById("aboutText").innerHTML = ABOUT.paragraphs.map(function(p){ return "<p>"+p+"</p>"; }).join("");
+  document.getElementById("aboutFacts").innerHTML = ABOUT.facts.map(function(f){
+    return '<div class="fact"><span class="k">'+f.k+'</span><span class="v">'+f.v+'</span></div>';
+  }).join("");
+}
 renderFilters();
 renderList();
 setContact();
 applyProfile();
+applyAbout();
 </script>
 </body>
 </html>

@@ -1,42 +1,60 @@
 # 个人主页 · 个人简介与生活随笔
 
-一个纯静态的个人网站，可直接免费部署到 **GitHub Pages**。深色书卷风设计，含个人简介、生活随笔（支持标签筛选与阅读弹层）、联系方式三个板块，桌面与移动端自适应。
+一个纯静态的个人网站，已部署到 **GitHub Pages**（https://zhangyun-loveslef.github.io/）。深色书卷风，含个人简介、生活随笔（标签筛选 + 阅读弹层）、联系方式三个板块，桌面与移动端自适应。
+
+**核心思路**：内容都放在「可编辑的源文件」里（随笔用 Markdown、个人信息用 JSON），改完运行一次 `build.bat`，`index.html` 就会自动重新生成。你不用碰 HTML。
 
 ## 文件结构
 
 ```
 personal-website/
-├── index.html   # 整个网站（单文件自包含，无需任何构建）
-└── README.md    # 本说明
+├── index.html          # 网站成品（构建后自动更新，无需手动改）
+├── site-config.json    # 个人信息 / 联系方式 / 关于我（改这里）
+├── essays/             # 生活随笔，每个 .md 一篇（用 Typora 编辑）
+│   ├── 慢下来的时光.md
+│   ├── 深夜里的代码.md
+│   ├── 城市与远山.md
+│   └── 读书记.md
+├── build.py            # 构建脚本（读取上面的源文件 → 生成 index.html）
+├── build.bat           # 双击即可运行 build.py
+├── .gitignore          # 已忽略 _shots/ 自检截图
+└── README.md
 ```
 
-`index.html` 是**单文件自包含**的：CSS 与 JS 全部内联，字体走公共镜像，没有本地图片依赖，一个文件即可完整运行。
+## 日常更新流程（3 步）
 
-## 如何部署到 GitHub Pages（约 3 分钟）
+1. **改内容**：用 Typora 打开 `essays/` 里的 `.md` 随笔；个人信息/联系方式改 `site-config.json`。
+2. **构建**：双击 `build.bat`（或命令行 `python build.py`），会重新生成 `index.html`。
+3. **推送**：用 TortoiseGit（右键 → Git Commit → Git Push）或命令行推送到 GitHub，约 1 分钟后线上更新。
 
-1. **创建仓库**：在 GitHub 上新建一个仓库，建议命名为 `你的用户名.github.io`（这样访问地址就是 `https://你的用户名.github.io`）。
-2. **上传文件**：把 `index.html`（和可选的 `README.md`）上传到仓库根目录。注意：**入口文件必须命名为 `index.html`**，GitHub Pages 会自动把它作为站点首页。
-3. **开启 Pages**：进入仓库 → `Settings` → `Pages` → `Source` 选择 `Deploy from a branch` → 分支选 `main` → 文件夹选 `/ (root)` → 保存。
-4. **等待生效**：约 1 分钟后访问 `https://你的用户名.github.io` 即可看到网站。
+## 怎么写一篇随笔
 
-> 后续每次修改提交到 `main` 分支，网站会自动重新部署。
+在 `essays/` 新建一个 `.md` 文件，格式如下（用 Typora 编辑即可，`---` 之间是标题信息）：
 
-## 怎么改成你自己的内容
+```
+---
+title: 文章的标题
+date: 2026-10-01
+tag: 生活
+---
 
-打开 `index.html`，翻到页面底部 `<script>` 里标注了「可编辑配置」的位置，改这几处即可：
+第一段文字……
 
-| 位置 | 改什么 |
-| --- | --- |
-| `PROFILE` 对象 | 你的名字、头像缩写、一句话介绍、简介文案 |
-| `ESSAYS` 数组 | 替换 4 篇示例随笔（标题/日期/标签/摘要/正文） |
-| `CONTACT` 对象 | 邮箱、GitHub 用户名、个人站点地址 |
-| 页面「关于我」区块 | 三段个人简介、工作/常做/坐标/喜欢 |
-| `<title>` 与 `<meta name="description">` | 网站标题与描述 |
+第二段文字……（段落之间用空行隔开）
 
-想新增一篇随笔：在 `ESSAYS` 数组里按同样格式加一个对象即可，标签会自动出现在筛选中。
+第三段文字……
+```
 
-## 说明
+- `tag` 可写：生活 / 工作 / 旅行 / 阅读 / 其它（网站会自动生成筛选标签）
+- `excerpt`（摘要）不写会自动取第一段前 60 字；想自定义可在 front matter 里加 `excerpt: 你自己的摘要`
+- 文件名就是文件名，不影响显示，显示标题以 `title` 为准
 
-- 当前 4 篇随笔为**示例文章**，用于展示排版，请替换为你自己的内容。
-- 全站纯静态、无后端、无追踪，加载快，适合长期维护。
-- 字体通过 `miaoda.feishu.cn` 自托管镜像加载，国内可正常访问。
+改完运行 `build.bat`，随笔会自动按日期从新到旧排列。
+
+## 改个人信息 / 联系方式
+
+编辑 `site-config.json`，各字段含义一目了然：`profile`（名字、头像字、一句话介绍）、`contact`（邮箱、GitHub、站点）、`about`（关于我的三段介绍 + 右侧几个快速信息）。改完运行 `build.bat`。
+
+## 部署说明（仅首次）
+
+仓库 `zhangyun-loveslef.github.io` 已开启 GitHub Pages，`main` 分支根目录即为网站，推送后自动发布，无需额外设置。
