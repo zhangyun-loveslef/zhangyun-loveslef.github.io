@@ -124,6 +124,12 @@ section{padding:60px 0;border-top:1px solid var(--hairline)}
 .reader-title{font-family:var(--serif);font-size:26px;font-weight:700;line-height:1.35;margin-bottom:20px}
 .reader-body{font-family:var(--serif);font-size:16.5px;line-height:2;color:#DDD9D3}
 .reader-body p{margin-bottom:18px}
+.reader-body img{max-width:100%;height:auto;border-radius:10px;border:1px solid var(--hairline)}
+.reader-body .essay-fig{margin:26px 0;text-align:center}
+.reader-body .essay-fig img{display:block;margin:0 auto}
+.reader-body .essay-fig figcaption{font-family:var(--sans);font-size:12.5px;color:var(--faint);margin-top:10px}
+.reader-body a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.reader-body strong{color:var(--text)}
 @media(max-width:640px){.reader-panel{padding:28px 22px}}
 
 /* ---------- 页脚 ---------- */
@@ -256,28 +262,28 @@ var ESSAYS = [
     date: "2026-09-20",
     tag: "生活",
     excerpt: "周末把手机丢在一边，去菜市场慢慢挑了两把青菜，回来煮了碗面。忽然发现，慢下来以后，时间的质感完全不同。",
-    content: ["周末把手机丢在一边，去菜市场慢慢挑了两把青菜，回来煮了碗面。忽然发现，慢下来以后，时间的质感完全不同。", "我们总被催促着快一点、再快一点，可真正值得回味的东西，往往都发生在慢里。一顿认真做的饭，一次没有目的的散步，一段不被打断的对话。", "这不是什么了不起的发现，但我想把它记下来，提醒自己：生活不在别处，就在这些被忽略的片刻里。", "（本文为示例文章，用 Typora 打开本文件替换成你自己的随笔即可。）"]
+    content: ["<p>周末把手机丢在一边，去菜市场慢慢挑了两把青菜，回来煮了碗面。忽然发现，慢下来以后，时间的质感完全不同。</p>", "<p>我们总被催促着快一点、再快一点，可真正值得回味的东西，往往都发生在慢里。一顿认真做的饭，一次没有目的的散步，一段不被打断的对话。</p>", "<p>这不是什么了不起的发现，但我想把它记下来，提醒自己：生活不在别处，就在这些被忽略的片刻里。</p>", "<p>（本文为示例文章，用 Typora 打开本文件替换成你自己的随笔即可。）</p>"]
   },
   {
     title: "深夜里的代码",
     date: "2026-08-14",
     tag: "工作",
     excerpt: "凌晨一点，盯着屏幕上一行怎么都不对的数据。调试的尽头往往不是技术问题，而是耐心与自己的和解。",
-    content: ["凌晨一点，盯着屏幕上一行怎么都不对的数据。调试的尽头往往不是技术问题，而是耐心与自己的和解。", "做了很多年，我越来越相信：写代码这件事，七分是逻辑，三分是心性。再难的 bug，只要肯静下来一行行拆，总会有答案。", "真正难的，是在持续失败的时候还愿意保持冷静，把每一次报错当成线索，而不是当成打击。", "（本文为示例文章，用 Typora 打开本文件替换成你自己的随笔即可。）"]
+    content: ["<p>凌晨一点，盯着屏幕上一行怎么都不对的数据。调试的尽头往往不是技术问题，而是耐心与自己的和解。</p>", "<p>做了很多年，我越来越相信：写代码这件事，七分是逻辑，三分是心性。再难的 bug，只要肯静下来一行行拆，总会有答案。</p>", "<p>真正难的，是在持续失败的时候还愿意保持冷静，把每一次报错当成线索，而不是当成打击。</p>", "<p>（本文为示例文章，用 Typora 打开本文件替换成你自己的随笔即可。）</p>"]
   },
   {
     title: "城市与远山",
     date: "2026-06-08",
     tag: "旅行",
     excerpt: "偶尔从高楼的缝隙里看见远处的山，心里会松一口气。原来在这个城市里，一直有一片山等着我。",
-    content: ["偶尔从高楼的缝隙里看见远处的山，心里会松一口气。原来在这个城市里，一直有一片山等着我。", "趁着假期去了趟山里。没有信号，没有日程，只有风、树影和走不完的路。走到半山腰的时候，忽然觉得一年里所有的疲惫都被卸下了。", "回来后我常想，人大概需要时不时离开一下，才能更清楚地知道自己为什么出发。", "（本文为示例文章，用 Typora 打开本文件替换成你自己的随笔即可。）"]
+    content: ["<p>偶尔从高楼的缝隙里看见远处的山，心里会松一口气。原来在这个城市里，一直有一片山等着我。</p>", "<figure class=\"essay-fig\"><img src=\"images/sample.svg\" alt=\"示例图片：去山里看到的景色\" loading=\"lazy\"><figcaption>示例图片：去山里看到的景色</figcaption></figure>", "<p>趁着假期去了趟山里。没有信号，没有日程，只有风、树影和走不完的路。走到半山腰的时候，忽然觉得一年里所有的疲惫都被卸下了。</p>", "<p>回来后我常想，人大概需要时不时离开一下，才能更清楚地知道自己为什么出发。</p>", "<p>（本文为示例文章，用 Typora 打开本文件替换成你自己的随笔即可。）</p>"]
   },
   {
     title: "读书记",
     date: "2026-04-02",
     tag: "阅读",
     excerpt: "书读到一半合上，发呆很久。好的文字从不急着告诉你答案，它只是在你心里种下一颗种子，等它自己发芽。",
-    content: ["书读到一半合上，发呆很久。好的文字从不急着告诉你答案，它只是在你心里种下一颗种子，等它自己发芽。", "这一年读的书不多，但每一本都留下了点什么。有的改变了我的想法，有的只是陪伴我度过了一段安静的时间。", "我慢慢不再追求「读完多少本」，而是更在意「被哪一句打动」。阅读的意义，大概就在这里。", "（本文为示例文章，用 Typora 打开本文件替换成你自己的随笔即可。）"]
+    content: ["<p>书读到一半合上，发呆很久。好的文字从不急着告诉你答案，它只是在你心里种下一颗种子，等它自己发芽。</p>", "<p>这一年读的书不多，但每一本都留下了点什么。有的改变了我的想法，有的只是陪伴我度过了一段安静的时间。</p>", "<p>我慢慢不再追求「读完多少本」，而是更在意「被哪一句打动」。阅读的意义，大概就在这里。</p>", "<p>（本文为示例文章，用 Typora 打开本文件替换成你自己的随笔即可。）</p>"]
   }
 ];
 /* ===== SITE-DATA-END ===== */
@@ -335,7 +341,7 @@ function openReader(e){
   document.getElementById("readerTag").textContent = e.tag;
   document.getElementById("readerDate").textContent = e.date;
   document.getElementById("readerTitle").textContent = e.title;
-  document.getElementById("readerBody").innerHTML = e.content.map(function(p){ return "<p>"+p+"</p>"; }).join("");
+  document.getElementById("readerBody").innerHTML = e.content.join("");
   reader.classList.add("open");
   document.body.style.overflow = "hidden";
   document.getElementById("readerClose").focus();

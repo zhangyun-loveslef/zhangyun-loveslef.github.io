@@ -32,6 +32,46 @@ def js_str(s):
     return '"' + s + '"'
 
 
+def html_escape(s):
+    return (s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+             .replace('"', "&quot;"))
+
+
+def is_image_line(p):
+    return bool(re.match(r"^!\[[^\]]*\]\([^)]+\)\s*$", p))
+
+
+def inline(text):
+    """把段落里的 Markdown 行内语法（图片/链接/加粗/斜体）转成 HTML。"""
+    def img(m):
+        alt = html_escape(m.group(1))
+        src = html_escape(m.group(2))
+        return '<img src="%s" alt="%s" loading="lazy">' % (src, alt)
+    text = re.sub(r"!\[([^\]]*)\]\(([^)]+)\)", img, text)
+
+    def lnk(m):
+        t = inline(m.group(1))
+        u = html_escape(m.group(2))
+        return '<a href="%s" target="_blank" rel="noopener">%s</a>' % (u, t)
+    text = re.sub(r"\[([^\]]+)\]\(([^)]+)\)", lnk, text)
+
+    text = html_escape(text)
+    text = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", text)
+    text = re.sub(r"(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)", r"<em>\1</em>", text)
+    return text
+
+
+def render_block(p):
+    """把一段文字转成 HTML 块：独占一行的图片渲染成 <figure>，其余为 <p>。"""
+    if is_image_line(p):
+        m = re.match(r"!\[([^\]]*)\]\(([^)]+)\)", p)
+        alt = html_escape(m.group(1))
+        src = html_escape(m.group(2))
+        cap = ("<figcaption>%s</figcaption>" % alt) if alt else ""
+        return '<figure class="essay-fig"><img src="%s" alt="%s" loading="lazy">%s</figure>' % (src, alt, cap)
+    return "<p>" + inline(p) + "</p>"
+
+
 def parse_md(path):
     text = read_text(path)
     meta = {}
@@ -52,15 +92,18 @@ def parse_md(path):
 
     title = meta.get("title", os.path.splitext(os.path.basename(path))[0])
     excerpt = meta.get("excerpt", "")
-    if not excerpt and paragraphs:
-        excerpt = paragraphs[0][:60] + ("…" if len(paragraphs[0]) > 60 else "")
+    if not excerpt:
+        for p in paragraphs:
+            if not is_image_line(p):
+                excerpt = p[:60] + ("…" if len(p) > 60 else "")
+                break
 
     return {
         "title": title,
         "date": meta.get("date", ""),
         "tag": meta.get("tag", "随笔"),
         "excerpt": excerpt,
-        "content": paragraphs,
+        "content": [render_block(p) for p in paragraphs],
     }
 
 

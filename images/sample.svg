@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="示例图片：远山与夕阳">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2A2731"/>
+      <stop offset="1" stop-color="#5C4A3A"/>
+    </linearGradient>
+    <linearGradient id="sun" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#E4B572"/>
+      <stop offset="1" stop-color="#D8A45C"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#sky)"/>
+  <circle cx="600" cy="360" r="90" fill="url(#sun)"/>
+  <path d="M0 520 L220 300 L400 470 L560 360 L760 540 L980 420 L1200 560 L1200 675 L0 675 Z" fill="#241F28"/>
+  <path d="M0 600 L260 430 L470 580 L660 480 L900 610 L1200 520 L1200 675 L0 675 Z" fill="#17151B"/>
+  <text x="600" y="620" text-anchor="middle" font-family="serif" font-size="22" fill="#A7A29B" letter-spacing="2">示例图片 · 远山</text>
+</svg>
