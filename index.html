@@ -346,6 +346,9 @@ var PLAN = {
   title: "100天减脂计划（150→126斤）",
   startDate: "2026-10-05",
   habits: [{name:"早起",target:"06:00 前"}, {name:"饮食",target:"≤1800 千卡"}, {name:"有氧",target:"4 km 跑步"}, {name:"力量",target:"20 分钟"}, {name:"喝水",target:"3000 ml"}, {name:"早睡",target:"23:00 前"}],
+  startWeight: 150,
+  targetWeight: 126,
+  weights: {},
   done: {}
 };
 var ESSAYS = [
@@ -520,16 +523,20 @@ function planDayNumber(){
   return n;
 }
 function planRenderTotal(){
-  var dayFull = 0, dayAny = 0, habitDone = 0, totalHabits = 100*PLAN.habits.length;
+  var sw = PLAN.startWeight || 150, tw = PLAN.targetWeight || 126;
+  var cur = sw;
+  for(var d=100; d>=1; d--){ if(PLAN.weights && PLAN.weights[d]){ cur = PLAN.weights[d]; break; } }
+  var total = sw - tw, lost = Math.max(0, sw - cur);
+  var pct = total>0 ? Math.min(100, Math.max(0, Math.round(lost*100/total))) : 0;
+  var dayFull = 0, habitDone = 0, totalHabits = 100*PLAN.habits.length;
   for(var d=1; d<=100; d++){
     var dd = PLAN.done ? PLAN.done[d] : null;
-    if(dd === true){ dayFull++; dayAny++; habitDone += PLAN.habits.length; }
-    else if(Array.isArray(dd) && dd.length>0){ dayAny++; habitDone += dd.length; if(dd.length===PLAN.habits.length) dayFull++; }
+    if(dd === true){ dayFull++; habitDone += PLAN.habits.length; }
+    else if(Array.isArray(dd) && dd.length>0){ habitDone += dd.length; if(dd.length===PLAN.habits.length) dayFull++; }
   }
-  var pct = totalHabits ? Math.round(habitDone*100/totalHabits) : 0;
   var sD = document.getElementById("planStatDays"), sH = document.getElementById("planStatHabits"), bar = document.getElementById("planBarFill");
-  if(sD) sD.textContent = "已完成 " + dayFull + "/100 天";
-  if(sH) sH.textContent = "习惯 " + habitDone + "/" + totalHabits + "（" + pct + "%）";
+  if(sD) sD.textContent = "体重 " + cur + " 斤 · 已减 " + lost + "/" + total + " 斤";
+  if(sH) sH.textContent = "目标 " + tw + " 斤 · " + pct + "% · 已完成 " + dayFull + "/100 天";
   if(bar) bar.style.width = pct + "%";
 }
 function planRenderGrid(){

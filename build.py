@@ -141,6 +141,10 @@ def build_data(cfg, essays):
         else:
             _habs.append("{name:%s,target:%s}" % (js_str(_h.get("name", "")), js_str(_h.get("target", ""))))
     lines.append("  habits: [%s]," % ", ".join(_habs))
+    lines.append("  startWeight: %s," % (pl.get("startWeight", 150) or 150))
+    lines.append("  targetWeight: %s," % (pl.get("targetWeight", 126) or 126))
+    _wt = pl.get("weights", {}) or {}
+    lines.append("  weights: {%s}," % ", ".join("%s:%s" % (k, v) for k, v in _wt.items()))
     _done = pl.get("done", {}) or {}
     _done_parts = []
     for _dk, _dv in _done.items():

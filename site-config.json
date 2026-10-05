@@ -27,6 +27,9 @@
       { "name": "喝水", "target": "3000 ml" },
       { "name": "早睡", "target": "23:00 前" }
     ],
+    "startWeight": 150,
+    "targetWeight": 126,
+    "weights": {},
     "done": {}
   }
 }
