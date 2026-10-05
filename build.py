@@ -15,6 +15,7 @@ BASE = os.path.dirname(os.path.abspath(__file__))
 HTML = os.path.join(BASE, "index.html")
 CONFIG = os.path.join(BASE, "site-config.json")
 ESSAYS_DIR = os.path.join(BASE, "essays")
+PLAN_LOG = os.path.join(BASE, "plan-log.md")
 
 START = "/* ===== SITE-DATA-START ===== */"
 END = "/* ===== SITE-DATA-END ===== */"
@@ -166,12 +167,63 @@ def build_data(cfg, essays):
     return "\n".join(lines)
 
 
+def parse_plan_log(cfg):
+    """从 plan-log.md 解析每天的完成标记(done)与体重(weights)，叠加到配置值之上。"""
+    base = cfg.get("plan", {}) or {}
+    done = dict(base.get("done", {}) or {})
+    weights = dict(base.get("weights", {}) or {})
+    habits = []
+    for h in base.get("habits", []):
+        if isinstance(h, str):
+            habits.append(h)
+        else:
+            habits.append(h.get("name", ""))
+    habits = [x for x in habits if x]
+    if not os.path.exists(PLAN_LOG):
+        return done, weights
+    cur = None
+    day_done = {}
+    for ln in read_text(PLAN_LOG).splitlines():
+        t = ln.strip()
+        m = re.match(r"^#+\s*第\s*(\d+)\s*天", t)
+        if m:
+            cur = int(m.group(1)); continue
+        if cur is None:
+            continue
+        wm = re.match(r"^[-*]?\s*体重\s*[:：]?\s*([\d.]+)", t)
+        if wm:
+            v = wm.group(1)
+            weights[str(cur)] = float(v) if "." in v else int(v)
+            continue
+        for hname in habits:
+            if re.match(r"^[-*]?\s*" + re.escape(hname) + r"\s*[:：]?", t):
+                rest = t[t.find(hname) + len(hname):]
+                if re.search(r"[✅✓√xX]", rest) or "完成" in rest:
+                    day_done.setdefault(cur, set()).add(hname)
+                break
+    allset = set(habits)
+    for d, st in day_done.items():
+        dl = sorted(st)
+        if dl and allset and set(dl) == allset:
+            done[str(d)] = True
+        elif dl:
+            done[str(d)] = dl
+    return done, weights
+
+
 def main():
     if not os.path.exists(HTML):
         print("错误：找不到 index.html（请在项目根目录运行本脚本）。")
         return 1
 
     cfg = json.loads(read_text(CONFIG))
+
+    # 用 plan-log.md 覆盖 plan.done / plan.weights（每天在 Typora 里更新）
+    d, w = parse_plan_log(cfg)
+    _pl = dict(cfg.get("plan", {}) or {})
+    _pl["done"] = d
+    _pl["weights"] = w
+    cfg["plan"] = _pl
 
     md_files = sorted(glob.glob(os.path.join(ESSAYS_DIR, "*.md")))
     essays = [parse_md(f) for f in md_files]
