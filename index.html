@@ -158,6 +158,34 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
 .side-note{font-size:11.5px;color:var(--faint);line-height:1.6;margin-top:6px}
 @media(min-width:1024px){.site-header{display:none}.hero{display:none}}
 @media(max-width:1023px){.layout{display:block}.side{display:none}}
+
+/* ===== 100天计划 ===== */
+.plan-progress{margin:4px 0 14px}
+.plan-stats{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:13.5px;color:var(--muted);margin-bottom:9px}
+.plan-stats span:first-child{color:var(--text)}
+.plan-bar{height:9px;border-radius:999px;background:var(--surface2);overflow:hidden}
+.plan-bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),#E4B572);transition:width .35s}
+.plan-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.plan-toolbar .btn{padding:8px 15px;font-size:13px}
+.plan-toolbar .btn:disabled{opacity:.4;cursor:not-allowed}
+.plan-pagelabel{font-size:13px;color:var(--muted)}
+.plan-spacer{flex:1}
+.plan-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.plan-day{border:1px solid var(--hairline);border-radius:12px;padding:14px 14px 12px;background:var(--surface);transition:.2s}
+.plan-day:hover{border-color:var(--muted)}
+.plan-day.today{border-color:var(--accent)}
+.plan-daynum{font-family:var(--serif);font-size:13.5px;font-weight:600;margin-bottom:9px;color:var(--text);display:flex;align-items:center;justify-content:space-between}
+.plan-day.today .plan-daynum{color:var(--accent)}
+.plan-todaytag{font-family:var(--sans);font-size:10.5px;color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:1px 7px}
+.plan-habit{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer;padding:4px 0;user-select:none}
+.plan-habit input{display:none}
+.plan-habit .box{width:16px;height:16px;border:1.5px solid var(--faint);border-radius:5px;display:inline-flex;align-items:center;justify-content:center;transition:.15s;flex:none}
+.plan-habit:hover .box{border-color:var(--muted)}
+.plan-habit input:checked + .box{background:var(--accent);border-color:var(--accent)}
+.plan-habit input:checked + .box::after{content:"";width:8px;height:5px;border-left:2px solid #1A1711;border-bottom:2px solid #1A1711;transform:rotate(-45deg) translate(-1px,-1px)}
+.plan-habit input:checked ~ .ht{color:var(--accent)}
+@media(max-width:900px){.plan-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.plan-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -170,6 +198,7 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
     <p class="side-lead lead-el">在这里写一句能概括你的话——比如你的职业、你在做的事，或是你希望别人记住你的方式。保持简单真诚，这一行会出现在网站最显眼的位置。</p>
     <nav class="side-nav nav">
       <a href="#about">关于</a>
+      <a href="#plan">计划</a>
       <a href="#essays">随笔</a>
       <a href="#contact">联系</a>
     </nav>
@@ -186,6 +215,7 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
     <button class="menu-btn" id="menuBtn" aria-label="打开菜单" aria-expanded="false" aria-controls="navMenu"><span></span></button>
     <nav class="nav" id="navMenu">
       <a href="#about">关于</a>
+      <a href="#plan">计划</a>
       <a href="#essays">随笔</a>
       <a href="#contact">联系</a>
     </nav>
@@ -228,6 +258,27 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
     <div class="note">以下为示例文章。随笔存放在 <code>essays/*.md</code>（可用 Typora 编辑），改完后运行 <code>build.bat</code> 重新生成页面即可。详细说明见 README。</div>
     <div class="filter" id="filter" role="tablist" aria-label="按标签筛选随笔"></div>
     <div class="essay-list" id="essayList"></div>
+  </section>
+
+  <!-- ===== 视图：100天计划 ===== -->
+  <section id="plan">
+    <div class="sec-head">
+      <div class="sec-eyebrow">Plan</div>
+      <h2 class="sec-title">100天计划</h2>
+      <p class="sec-desc" id="planDesc"></p>
+    </div>
+    <div class="plan-progress">
+      <div class="plan-stats"><span id="planStatDays"></span><span id="planStatHabits"></span></div>
+      <div class="plan-bar"><span id="planBarFill"></span></div>
+    </div>
+    <div class="plan-toolbar">
+      <button class="btn btn-ghost" id="planPrev">‹ 上一组</button>
+      <span class="plan-pagelabel" id="planPageLabel"></span>
+      <button class="btn btn-ghost" id="planNext">下一组 ›</button>
+      <span class="plan-spacer"></span>
+      <button class="btn btn-ghost" id="planReset">重置打卡</button>
+    </div>
+    <div class="plan-grid" id="planGrid"></div>
   </section>
 
   <!-- ===== 视图：联系 ===== -->
@@ -291,6 +342,11 @@ var ABOUT = {
   desc: "大大方方，真诚坦荡。简简单单，不留遗憾",
   paragraphs: ["00后，来自湖南永州的一个小县城, 工作于深圳宝安西乡", "失恋ing，计划用100天改变自己，多记录生活"],
   facts: []
+};
+var PLAN = {
+  title: "100天改变自己",
+  startDate: "2026-10-05",
+  habits: ["早起", "跑步", "喝水", "阅读", "早睡"]
 };
 var ESSAYS = [
   {
@@ -410,7 +466,7 @@ navMenu.addEventListener("click", function(ev){
 });
 
 /* ============ 滚动高亮导航 ============ */
-var sections = ["about","essays","contact"];
+var sections = ["about","plan","essays","contact"];
 var navLinks = document.querySelectorAll(".nav a");
 var sectionEls = sections.map(function(id){ return document.getElementById(id); });
 var inView = {};
@@ -446,6 +502,71 @@ document.getElementById("backTop").addEventListener("click", function(ev){
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
+/* ============ 100天计划 ============ */
+var PLAN_STATE = (function(){ try{ return JSON.parse(localStorage.getItem("plan100")) || {}; }catch(e){ return {}; } })();
+function planSave(){ try{ localStorage.setItem("plan100", JSON.stringify(PLAN_STATE)); }catch(e){} }
+var planPage = 0, PLAN_PAGE_SIZE = 10;
+function planDayNumber(){
+  if(!PLAN.startDate) return 1;
+  var start = new Date(PLAN.startDate + "T00:00:00"), now = new Date();
+  now.setHours(0,0,0,0);
+  var n = Math.floor((now - start)/86400000) + 1;
+  if(n < 1) n = 1; if(n > 100) n = 100;
+  return n;
+}
+function planStats(){
+  var doneDays = 0, doneHabits = 0;
+  for(var d=1; d<=100; d++){
+    var day = PLAN_STATE[d] || {};
+    var cnt = PLAN.habits.filter(function(h){ return day[h]; }).length;
+    doneHabits += cnt;
+    if(cnt === PLAN.habits.length) doneDays++;
+  }
+  return { doneDays: doneDays, doneHabits: doneHabits, totalHabits: 100*PLAN.habits.length };
+}
+function planRenderStats(){
+  var s = planStats(), today = planDayNumber();
+  document.getElementById("planStatDays").textContent = "已坚持 " + s.doneDays + "/100 天 · 今天是第 " + today + " 天";
+  document.getElementById("planStatHabits").textContent = "完成习惯 " + s.doneHabits + "/" + s.totalHabits + "（" + Math.round(s.doneHabits*100/s.totalHabits) + "%）";
+  document.getElementById("planBarFill").style.width = Math.round(s.doneHabits*100/s.totalHabits) + "%";
+}
+function planRenderGrid(){
+  var grid = document.getElementById("planGrid"), today = planDayNumber();
+  grid.innerHTML = "";
+  var start = planPage*PLAN_PAGE_SIZE + 1, end = Math.min(start + PLAN_PAGE_SIZE - 1, 100);
+  document.getElementById("planPageLabel").textContent = "第 " + start + "–" + end + " 天";
+  for(var d=start; d<=end; d++){
+    var card = document.createElement("div");
+    card.className = "plan-day" + (d===today ? " today" : "");
+    var tag = (d===today) ? '<span class="plan-todaytag">今天</span>' : "";
+    var hh = "";
+    PLAN.habits.forEach(function(h){
+      var on = !!(PLAN_STATE[d] && PLAN_STATE[d][h]);
+      hh += '<label class="plan-habit"><input type="checkbox" data-day="'+d+'" data-habit="'+encodeURIComponent(h)+'"'+(on?' checked':'')+'><span class="box"></span><span class="ht">'+h+'</span></label>';
+    });
+    card.innerHTML = '<div class="plan-daynum"><span>第 '+d+' 天</span>'+tag+'</div>'+hh;
+    grid.appendChild(card);
+  }
+  grid.querySelectorAll("input[type=checkbox]").forEach(function(cb){
+    cb.addEventListener("change", function(){
+      var day = parseInt(cb.dataset.day, 10), habit = decodeURIComponent(cb.dataset.habit);
+      var dd = PLAN_STATE[day] = PLAN_STATE[day] || {};
+      if(dd[habit]) delete dd[habit]; else dd[habit] = true;
+      planSave(); planRenderStats();
+    });
+  });
+  document.getElementById("planPrev").disabled = (planPage===0);
+  document.getElementById("planNext").disabled = (end===100);
+}
+function initPlan(){
+  if(!document.getElementById("planGrid")) return;
+  document.getElementById("planDesc").textContent = PLAN.title + "：每日打卡「" + PLAN.habits.join(" / ") + "」，打勾自动保存。";
+  document.getElementById("planPrev").addEventListener("click", function(){ if(planPage>0){ planPage--; planRenderGrid(); } });
+  document.getElementById("planNext").addEventListener("click", function(){ if((planPage+1)*PLAN_PAGE_SIZE<100){ planPage++; planRenderGrid(); } });
+  document.getElementById("planReset").addEventListener("click", function(){ if(confirm("确定清空全部打卡记录吗？此操作不可撤销。")){ PLAN_STATE={}; planSave(); planRenderStats(); planRenderGrid(); } });
+  planRenderStats(); planRenderGrid();
+}
+
 /* ============ 初始化 ============ */
 function applyProfile(){
   document.querySelectorAll(".brand span:last-child").forEach(function(e){ e.textContent = PROFILE.name; });
@@ -476,6 +597,7 @@ renderList();
 setContact();
 applyProfile();
 applyAbout();
+initPlan();
 </script>
 </body>
 </html>

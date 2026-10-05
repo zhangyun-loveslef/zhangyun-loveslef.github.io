@@ -130,6 +130,12 @@ def build_data(cfg, essays):
     facts = ", ".join("{k:%s,v:%s}" % (js_str(f["k"]), js_str(f["v"])) for f in a.get("facts", []) or [])
     lines.append("  facts: [%s]" % facts)
     lines.append("};")
+    pl = cfg.get("plan", {})
+    lines.append("var PLAN = {")
+    lines.append("  title: %s," % js_str(pl.get("title", "100天计划")))
+    lines.append("  startDate: %s," % js_str(pl.get("startDate", "")))
+    lines.append("  habits: [%s]" % ", ".join(js_str(h) for h in pl.get("habits", ["早起", "跑步", "喝水", "阅读", "早睡"])))
+    lines.append("};")
     lines.append("var ESSAYS = [")
     for i, e in enumerate(essays):
         lines.append("  {")
