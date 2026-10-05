@@ -160,6 +160,11 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
 @media(max-width:1023px){.layout{display:block}.side{display:none}}
 
 /* ===== 100天计划 ===== */
+.plan-progress{margin:2px 0 16px}
+.plan-stats{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:13.5px;color:var(--muted);margin-bottom:9px}
+.plan-stats span:first-child{color:var(--text)}
+.plan-bar{height:9px;border-radius:999px;background:var(--surface2);overflow:hidden}
+.plan-bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),#E4B572);transition:width .35s}
 .plan-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap}
 .plan-toolbar .btn{padding:8px 15px;font-size:13px}
 .plan-toolbar .btn:disabled{opacity:.4;cursor:not-allowed}
@@ -251,10 +256,14 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
       <h2 class="sec-title">100天计划</h2>
       <p class="sec-desc" id="planDesc"></p>
     </div>
+    <div class="plan-progress">
+      <div class="plan-stats"><span id="planStatDays"></span><span id="planStatHabits"></span></div>
+      <div class="plan-bar"><span id="planBarFill"></span></div>
+    </div>
     <div class="plan-toolbar">
-      <button class="btn btn-ghost" id="planPrev">‹ 上一组</button>
+      <button class="btn btn-ghost" id="planPrev">‹ 上一周</button>
       <span class="plan-pagelabel" id="planPageLabel"></span>
-      <button class="btn btn-ghost" id="planNext">下一组 ›</button>
+      <button class="btn btn-ghost" id="planNext">下一周 ›</button>
     </div>
     <div class="plan-grid" id="planGrid"></div>
   </section>
@@ -501,7 +510,7 @@ document.getElementById("backTop").addEventListener("click", function(ev){
 });
 
 /* ============ 100天计划（后台配置 · 前台只读展示） ============ */
-var planPage = 0, PLAN_PAGE_SIZE = 10;
+var planPage = 0, PLAN_PAGE_SIZE = 7;
 function planDayNumber(){
   if(!PLAN.startDate) return 1;
   var start = new Date(PLAN.startDate + "T00:00:00"), now = new Date();
@@ -510,11 +519,24 @@ function planDayNumber(){
   if(n < 1) n = 1; if(n > 100) n = 100;
   return n;
 }
+function planRenderTotal(){
+  var dayFull = 0, dayAny = 0, habitDone = 0, totalHabits = 100*PLAN.habits.length;
+  for(var d=1; d<=100; d++){
+    var dd = PLAN.done ? PLAN.done[d] : null;
+    if(dd === true){ dayFull++; dayAny++; habitDone += PLAN.habits.length; }
+    else if(Array.isArray(dd) && dd.length>0){ dayAny++; habitDone += dd.length; if(dd.length===PLAN.habits.length) dayFull++; }
+  }
+  var pct = totalHabits ? Math.round(habitDone*100/totalHabits) : 0;
+  var sD = document.getElementById("planStatDays"), sH = document.getElementById("planStatHabits"), bar = document.getElementById("planBarFill");
+  if(sD) sD.textContent = "已完成 " + dayFull + "/100 天";
+  if(sH) sH.textContent = "习惯 " + habitDone + "/" + totalHabits + "（" + pct + "%）";
+  if(bar) bar.style.width = pct + "%";
+}
 function planRenderGrid(){
   var grid = document.getElementById("planGrid"), today = planDayNumber();
   grid.innerHTML = "";
   var start = planPage*PLAN_PAGE_SIZE + 1, end = Math.min(start + PLAN_PAGE_SIZE - 1, 100);
-  document.getElementById("planPageLabel").textContent = "第 " + start + "–" + end + " 天";
+  document.getElementById("planPageLabel").textContent = "第 " + (Math.floor((start-1)/7)+1) + " 周 · 第 " + start + "–" + end + " 天";
   for(var d=start; d<=end; d++){
     var ddone = PLAN.done ? PLAN.done[d] : null;
     var doneAll = (ddone === true);
@@ -542,7 +564,7 @@ function initPlan(){
   document.getElementById("planDesc").textContent = PLAN.title + "：每天计划「" + PLAN.habits.map(function(h){return h.name + (h.target ? " " + h.target : "");}).join(" / ") + "」，内容由后台 site-config.json 配置。";
   document.getElementById("planPrev").addEventListener("click", function(){ if(planPage>0){ planPage--; planRenderGrid(); } });
   document.getElementById("planNext").addEventListener("click", function(){ if((planPage+1)*PLAN_PAGE_SIZE<100){ planPage++; planRenderGrid(); } });
-  planRenderGrid();
+  planRenderTotal(); planRenderGrid();
 }
 
 /* ============ 初始化 ============ */
