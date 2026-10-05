@@ -138,10 +138,48 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
 .footer-inner{max-width:var(--maxw);margin:0 auto;padding:30px 22px;display:flex;align-items:center;justify-content:space-between;color:var(--faint);font-size:13px;flex-wrap:wrap;gap:12px}
 .footer-inner a{color:var(--muted)}
 .footer-inner a:hover{color:var(--accent)}
+
+/* ===== 桌面双栏布局 ===== */
+.layout{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:300px 1fr;min-height:100vh}
+.side{position:sticky;top:0;height:100vh;padding:46px 34px;border-right:1px solid var(--hairline);display:flex;flex-direction:column;background:var(--bg)}
+.side-brand{display:flex;align-items:center;gap:12px}
+.side .monogram{width:40px;height:40px;font-size:18px}
+.side-name{font-family:var(--serif);font-size:26px;font-weight:700;margin-top:22px;line-height:1.25}
+.side-sub{font-family:var(--serif);color:var(--accent);font-weight:600;font-size:15px;margin-top:8px}
+.side-lead{color:var(--muted);font-size:13.5px;line-height:1.75;margin-top:16px;max-width:240px}
+.side-nav{display:flex;flex-direction:column;gap:2px;margin-top:38px}
+.side-nav a{padding:10px 14px;border-radius:8px;color:var(--muted);font-size:15px;transition:.2s}
+.side-nav a:hover{color:var(--text);background:var(--surface)}
+.side-nav a[aria-current]{color:var(--accent);background:var(--accent-soft)}
+.side-foot{margin-top:auto;display:flex;flex-direction:column;gap:12px;padding-top:20px;border-top:1px solid var(--hairline);font-size:13px;color:var(--faint)}
+.side-foot a{color:var(--muted);display:flex;align-items:center;gap:9px;transition:.2s;width:max-content}
+.side-foot a:hover{color:var(--accent)}
+.side-foot svg{flex:none}
+.side-note{font-size:11.5px;color:var(--faint);line-height:1.6;margin-top:6px}
+@media(min-width:1024px){.site-header{display:none}.hero{display:none}}
+@media(max-width:1023px){.layout{display:block}.side{display:none}}
 </style>
 </head>
 <body>
 
+<div class="layout">
+  <aside class="side">
+    <a class="side-brand" href="#hero"><span class="monogram">名</span></a>
+    <h2 class="side-name name-el">你的名字</h2>
+    <p class="side-sub sub-el">一句话介绍你自己</p>
+    <p class="side-lead lead-el">在这里写一句能概括你的话——比如你的职业、你在做的事，或是你希望别人记住你的方式。保持简单真诚，这一行会出现在网站最显眼的位置。</p>
+    <nav class="side-nav nav">
+      <a href="#about">关于</a>
+      <a href="#essays">随笔</a>
+      <a href="#contact">联系</a>
+    </nav>
+    <div class="side-foot">
+      <a id="sideEmail" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span id="sideEmailTxt">邮箱</span></a>
+      <a id="sideGithub" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12 12 0 0 0-6.2 0C6.5 2.6 5.4 2.9 5.4 2.9a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.3c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg><span id="sideGithubTxt">GitHub</span></a>
+      <p class="side-note">记录生活 · 分享随笔</p>
+    </div>
+  </aside>
+  <div class="layout-right">
 <header class="site-header">
   <div class="header-inner">
     <a class="brand" href="#hero"><span class="monogram" id="monogram">名</span><span>你的名字</span></a>
@@ -158,9 +196,9 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
   <!-- ===== 视图：Hero ===== -->
   <section class="hero" id="hero">
     <div class="hero-avatar" id="heroAvatar">名</div>
-    <h1>你的名字</h1>
-    <div class="sub">一句话介绍你自己</div>
-    <p class="lead">在这里写一句能概括你的话——比如你的职业、你在做的事，或是你希望别人记住你的方式。保持简单真诚，这一行会出现在网站最显眼的位置。</p>
+    <h1 class="name-el">你的名字</h1>
+    <div class="sub sub-el">一句话介绍你自己</div>
+    <p class="lead lead-el">在这里写一句能概括你的话——比如你的职业、你在做的事，或是你希望别人记住你的方式。保持简单真诚，这一行会出现在网站最显眼的位置。</p>
     <div class="hero-cta">
       <a class="btn btn-primary" href="#essays">阅读随笔</a>
       <a class="btn btn-ghost" href="#contact">联系我</a>
@@ -218,6 +256,8 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
     <span>由 <a href="#hero">纯静态 HTML</a> 构建 · <a href="#" id="backTop">回到顶部</a></span>
   </div>
 </footer>
+  </div>
+</div>
 
 <!-- ===== 阅读弹层 ===== -->
 <div class="reader" id="reader" role="dialog" aria-modal="true" aria-labelledby="readerTitle">
@@ -393,6 +433,10 @@ function setContact(){
   document.getElementById("cardGithub").href = "https://"+CONTACT.github;
   if(!CONTACT.email) document.getElementById("cardEmail").style.display = "none";
   if(!CONTACT.github) document.getElementById("cardGithub").style.display = "none";
+  var se = document.getElementById("sideEmail");
+  if(se){ se.href = "mailto:"+CONTACT.email; document.getElementById("sideEmailTxt").textContent = CONTACT.email || "邮箱"; }
+  var sg = document.getElementById("sideGithub");
+  if(sg){ sg.href = "https://"+CONTACT.github; document.getElementById("sideGithubTxt").textContent = CONTACT.github || "GitHub"; }
 }
 
 /* ============ 页脚年份 / 回到顶部 ============ */
@@ -404,12 +448,12 @@ document.getElementById("backTop").addEventListener("click", function(ev){
 
 /* ============ 初始化 ============ */
 function applyProfile(){
-  document.querySelector(".brand span:last-child").textContent = PROFILE.name;
-  document.getElementById("monogram").textContent = PROFILE.monogram;
-  document.getElementById("heroAvatar").textContent = PROFILE.monogram;
-  document.querySelector(".hero h1").textContent = PROFILE.name;
-  document.querySelector(".hero .sub").textContent = PROFILE.sub;
-  document.querySelector(".hero .lead").textContent = PROFILE.lead;
+  document.querySelectorAll(".brand span:last-child").forEach(function(e){ e.textContent = PROFILE.name; });
+  document.querySelectorAll(".monogram").forEach(function(e){ e.textContent = PROFILE.monogram; });
+  if(document.getElementById("heroAvatar")) document.getElementById("heroAvatar").textContent = PROFILE.monogram;
+  document.querySelectorAll(".name-el").forEach(function(e){ e.textContent = PROFILE.name; });
+  document.querySelectorAll(".sub-el").forEach(function(e){ e.textContent = PROFILE.sub; });
+  document.querySelectorAll(".lead-el").forEach(function(e){ e.textContent = PROFILE.lead; });
   document.title = PROFILE.name + " · 个人主页";
   document.getElementById("footerName").textContent = PROFILE.name;
 }
