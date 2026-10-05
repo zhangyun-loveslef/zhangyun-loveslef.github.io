@@ -113,7 +113,6 @@ def build_data(cfg, essays):
     a = cfg["about"]
 
     lines = []
-    lines.append("/* 以下数据由 build.py 从 essays/*.md 与 site-config.json 自动生成，请勿手动修改 */")
     lines.append("var PROFILE = {")
     lines.append("  name: %s," % js_str(p["name"]))
     lines.append("  monogram: %s," % js_str(p["monogram"]))

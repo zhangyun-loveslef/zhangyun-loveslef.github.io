@@ -279,9 +279,8 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
     <div class="sec-head">
       <div class="sec-eyebrow">Essays</div>
       <h2 class="sec-title">生活随笔</h2>
-      <p class="sec-desc">记录生活里的一些碎片与想法。点击任意一篇可展开阅读。</p>
+      <p class="sec-desc">记录生活里的一些碎片与想法。</p>
     </div>
-    <div class="note">以下为示例文章。随笔存放在 <code>essays/*.md</code>（可用 Typora 编辑），改完后运行 <code>build.bat</code> 重新生成页面即可。详细说明见 README。</div>
     <div class="filter" id="filter" role="tablist" aria-label="按标签筛选随笔"></div>
     <div class="essay-list" id="essayList"></div>
   </section>
@@ -291,7 +290,7 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
     <div class="sec-head">
       <div class="sec-eyebrow">Contact</div>
       <h2 class="sec-title">联系我</h2>
-      <p class="sec-desc">欢迎交流，把联系方式替换成你自己的。</p>
+      <p class="sec-desc">欢迎交流。</p>
     </div>
     <div class="contact-grid">
       <a class="contact-card" id="cardEmail" href="#contact">
@@ -332,7 +331,6 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
 
 <script>
 /* ===== SITE-DATA-START ===== */
-/* 以下数据由 build.py 从 essays/*.md 与 site-config.json 自动生成，请勿手动修改 */
 var PROFILE = {
   name: "小张同学",
   monogram: "云",
@@ -370,28 +368,28 @@ var ESSAYS = [
     date: "2026-09-20",
     tag: "生活",
     excerpt: "周末把手机丢在一边，去菜市场慢慢挑了两把青菜，回来煮了碗面。忽然发现，慢下来以后，时间的质感完全不同。",
-    content: ["<p>周末把手机丢在一边，去菜市场慢慢挑了两把青菜，回来煮了碗面。忽然发现，慢下来以后，时间的质感完全不同。</p>", "<p>我们总被催促着快一点、再快一点，可真正值得回味的东西，往往都发生在慢里。一顿认真做的饭，一次没有目的的散步，一段不被打断的对话。</p>", "<p>这不是什么了不起的发现，但我想把它记下来，提醒自己：生活不在别处，就在这些被忽略的片刻里。</p>", "<p>（本文为示例文章，用 Typora 打开本文件替换成你自己的随笔即可。）</p>"]
+    content: ["<p>周末把手机丢在一边，去菜市场慢慢挑了两把青菜，回来煮了碗面。忽然发现，慢下来以后，时间的质感完全不同。</p>", "<p>我们总被催促着快一点、再快一点，可真正值得回味的东西，往往都发生在慢里。一顿认真做的饭，一次没有目的的散步，一段不被打断的对话。</p>", "<p>这不是什么了不起的发现，但我想把它记下来，提醒自己：生活不在别处，就在这些被忽略的片刻里。</p>"]
   },
   {
     title: "深夜里的代码",
     date: "2026-08-14",
     tag: "工作",
     excerpt: "凌晨一点，盯着屏幕上一行怎么都不对的数据。调试的尽头往往不是技术问题，而是耐心与自己的和解。",
-    content: ["<p>凌晨一点，盯着屏幕上一行怎么都不对的数据。调试的尽头往往不是技术问题，而是耐心与自己的和解。</p>", "<p>做了很多年，我越来越相信：写代码这件事，七分是逻辑，三分是心性。再难的 bug，只要肯静下来一行行拆，总会有答案。</p>", "<p>真正难的，是在持续失败的时候还愿意保持冷静，把每一次报错当成线索，而不是当成打击。</p>", "<p>（本文为示例文章，用 Typora 打开本文件替换成你自己的随笔即可。）</p>"]
+    content: ["<p>凌晨一点，盯着屏幕上一行怎么都不对的数据。调试的尽头往往不是技术问题，而是耐心与自己的和解。</p>", "<p>做了很多年，我越来越相信：写代码这件事，七分是逻辑，三分是心性。再难的 bug，只要肯静下来一行行拆，总会有答案。</p>", "<p>真正难的，是在持续失败的时候还愿意保持冷静，把每一次报错当成线索，而不是当成打击。</p>"]
   },
   {
     title: "城市与远山",
     date: "2026-06-08",
     tag: "旅行",
     excerpt: "偶尔从高楼的缝隙里看见远处的山，心里会松一口气。原来在这个城市里，一直有一片山等着我。",
-    content: ["<p>偶尔从高楼的缝隙里看见远处的山，心里会松一口气。原来在这个城市里，一直有一片山等着我。</p>", "<figure class=\"essay-fig\"><img src=\"images/sample.svg\" alt=\"示例图片：去山里看到的景色\" loading=\"lazy\"><figcaption>示例图片：去山里看到的景色</figcaption></figure>", "<p>趁着假期去了趟山里。没有信号，没有日程，只有风、树影和走不完的路。走到半山腰的时候，忽然觉得一年里所有的疲惫都被卸下了。</p>", "<p>回来后我常想，人大概需要时不时离开一下，才能更清楚地知道自己为什么出发。</p>", "<p>（本文为示例文章，用 Typora 打开本文件替换成你自己的随笔即可。）</p>"]
+    content: ["<p>偶尔从高楼的缝隙里看见远处的山，心里会松一口气。原来在这个城市里，一直有一片山等着我。</p>", "<figure class=\"essay-fig\"><img src=\"images/sample.svg\" alt=\"去山里看到的景色\" loading=\"lazy\"><figcaption>去山里看到的景色</figcaption></figure>", "<p>趁着假期去了趟山里。没有信号，没有日程，只有风、树影和走不完的路。走到半山腰的时候，忽然觉得一年里所有的疲惫都被卸下了。</p>", "<p>回来后我常想，人大概需要时不时离开一下，才能更清楚地知道自己为什么出发。</p>"]
   },
   {
     title: "读书记",
     date: "2026-04-02",
     tag: "阅读",
     excerpt: "书读到一半合上，发呆很久。好的文字从不急着告诉你答案，它只是在你心里种下一颗种子，等它自己发芽。",
-    content: ["<p>书读到一半合上，发呆很久。好的文字从不急着告诉你答案，它只是在你心里种下一颗种子，等它自己发芽。</p>", "<p>这一年读的书不多，但每一本都留下了点什么。有的改变了我的想法，有的只是陪伴我度过了一段安静的时间。</p>", "<p>我慢慢不再追求「读完多少本」，而是更在意「被哪一句打动」。阅读的意义，大概就在这里。</p>", "<p>（本文为示例文章，用 Typora 打开本文件替换成你自己的随笔即可。）</p>"]
+    content: ["<p>书读到一半合上，发呆很久。好的文字从不急着告诉你答案，它只是在你心里种下一颗种子，等它自己发芽。</p>", "<p>这一年读的书不多，但每一本都留下了点什么。有的改变了我的想法，有的只是陪伴我度过了一段安静的时间。</p>", "<p>我慢慢不再追求「读完多少本」，而是更在意「被哪一句打动」。阅读的意义，大概就在这里。</p>"]
   }
 ];
 /* ===== SITE-DATA-END ===== */
@@ -497,7 +495,7 @@ var observer = new IntersectionObserver(function(entries){
 }, { rootMargin: "-40% 0px -55% 0px" });
 sectionEls.forEach(function(s){ if(s) observer.observe(s); });
 
-/* ============ 联系卡片：把占位链接替换为真实地址 ============ */
+
 function setContact(){
   document.getElementById("emailValue").textContent = CONTACT.email;
   document.getElementById("githubValue").textContent = CONTACT.github;
@@ -579,7 +577,7 @@ function planRenderChart(){
   for(var d=1; d<=100; d++){ if(PLAN.weights && PLAN.weights[d]) pts.push([d, PLAN.weights[d]]); }
   if(pts.length < 1){
     box.style.height = 'auto';
-    box.innerHTML = '<div class="plan-chart-empty">在 site-config.json 的 plan.weights 里记录体重后，这里会显示体重趋势曲线。</div>';
+    box.innerHTML = '<div class="plan-chart-empty">暂无体重记录</div>';
     return;
   }
   box.style.height = '240px';
@@ -610,7 +608,7 @@ function planRenderChart(){
 }
 function initPlan(){
   if(!document.getElementById("planGrid")) return;
-  document.getElementById("planDesc").textContent = PLAN.title + "：每天计划「" + PLAN.habits.map(function(h){return h.name + (h.target ? " " + h.target : "");}).join(" / ") + "」，内容由后台 site-config.json 配置。";
+  document.getElementById("planDesc").textContent = PLAN.title + "：每天计划「" + PLAN.habits.map(function(h){return h.name + (h.target ? " " + h.target : "");}).join(" / ") + "」。";
   document.getElementById("planPrev").addEventListener("click", function(){ if(planPage>0){ planPage--; planRenderGrid(); } });
   document.getElementById("planNext").addEventListener("click", function(){ if((planPage+1)*PLAN_PAGE_SIZE<100){ planPage++; planRenderGrid(); } });
   planRenderTotal(); planRenderGrid(); planRenderChart();
