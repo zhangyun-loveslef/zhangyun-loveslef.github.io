@@ -165,6 +165,11 @@ def main():
     tail = html.split(END, 1)[1]
     new_html = head + START + "\n" + data + "\n" + END + tail
 
+    # 同步浏览器标签页标题与 meta 描述
+    name = cfg["profile"].get("name", "个人主页")
+    new_html = re.sub(r"<title>.*?</title>", "<title>%s · 个人主页</title>" % html_escape(name), new_html, count=1, flags=re.S)
+    new_html = re.sub(r'name="description" content="[^"]*"', 'name="description" content="%s 的个人简介与生活随笔"' % html_escape(name), new_html, count=1)
+
     with open(HTML, "w", encoding="utf-8") as f:
         f.write(new_html)
 
