@@ -208,11 +208,12 @@ def parse_plan_log(cfg):
             hm = re.match(r"^[-*]?\s*" + re.escape(hname) + r"\s*[:：]?\s*(.*)$", t)
             if hm:
                 val = hm.group(1).strip()
-                if CHECK.search(val):
-                    day_done.setdefault(cur, set()).add(hname)
-                elif val:
-                    day_done.setdefault(cur, set()).add(hname)
-                    day_rec.setdefault(cur, {})[hname] = val
+                if not val:
+                    break
+                day_done.setdefault(cur, set()).add(hname)
+                vclean = CHECK.sub("", val).strip().lstrip(":：").strip()
+                if vclean:
+                    day_rec.setdefault(cur, {})[hname] = vclean
                 break
     allset = set(habits)
     for d, st in day_done.items():
