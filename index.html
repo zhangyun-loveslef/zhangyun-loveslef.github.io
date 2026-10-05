@@ -160,16 +160,10 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
 @media(max-width:1023px){.layout{display:block}.side{display:none}}
 
 /* ===== 100天计划 ===== */
-.plan-progress{margin:4px 0 14px}
-.plan-stats{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:13.5px;color:var(--muted);margin-bottom:9px}
-.plan-stats span:first-child{color:var(--text)}
-.plan-bar{height:9px;border-radius:999px;background:var(--surface2);overflow:hidden}
-.plan-bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),#E4B572);transition:width .35s}
 .plan-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap}
 .plan-toolbar .btn{padding:8px 15px;font-size:13px}
 .plan-toolbar .btn:disabled{opacity:.4;cursor:not-allowed}
 .plan-pagelabel{font-size:13px;color:var(--muted)}
-.plan-spacer{flex:1}
 .plan-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
 .plan-day{border:1px solid var(--hairline);border-radius:12px;padding:14px 14px 12px;background:var(--surface);transition:.2s}
 .plan-day:hover{border-color:var(--muted)}
@@ -177,15 +171,9 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
 .plan-daynum{font-family:var(--serif);font-size:13.5px;font-weight:600;margin-bottom:9px;color:var(--text);display:flex;align-items:center;justify-content:space-between}
 .plan-day.today .plan-daynum{color:var(--accent)}
 .plan-todaytag{font-family:var(--sans);font-size:10.5px;color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:1px 7px}
-.plan-habit{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer;padding:4px 0;user-select:none}
-.plan-habit input{display:none}
-.plan-habit .box{width:16px;height:16px;border:1.5px solid var(--faint);border-radius:5px;display:inline-flex;align-items:center;justify-content:center;transition:.15s;flex:none}
-.plan-habit:hover .box{border-color:var(--muted)}
-.plan-habit input:checked + .box{background:var(--accent);border-color:var(--accent)}
-.plan-habit input:checked + .box::after{content:"";width:8px;height:5px;border-left:2px solid #1A1711;border-bottom:2px solid #1A1711;transform:rotate(-45deg) translate(-1px,-1px)}
-.plan-habit input:checked ~ .ht{color:var(--accent)}
-.plan-habit .htg{margin-left:auto;font-size:11px;color:var(--faint);letter-spacing:.3px}
-.plan-habit input:checked ~ .htg{color:var(--muted)}
+.plan-row{display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-size:13px;color:var(--muted);padding:4.5px 0;border-bottom:1px dashed var(--hairline)}
+.plan-row:last-child{border-bottom:none}
+.plan-row .htg{margin-left:auto;font-size:11px;color:var(--faint);letter-spacing:.3px;white-space:nowrap}
 @media(max-width:900px){.plan-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:560px){.plan-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
@@ -257,16 +245,10 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
       <h2 class="sec-title">100天计划</h2>
       <p class="sec-desc" id="planDesc"></p>
     </div>
-    <div class="plan-progress">
-      <div class="plan-stats"><span id="planStatDays"></span><span id="planStatHabits"></span></div>
-      <div class="plan-bar"><span id="planBarFill"></span></div>
-    </div>
     <div class="plan-toolbar">
       <button class="btn btn-ghost" id="planPrev">‹ 上一组</button>
       <span class="plan-pagelabel" id="planPageLabel"></span>
       <button class="btn btn-ghost" id="planNext">下一组 ›</button>
-      <span class="plan-spacer"></span>
-      <button class="btn btn-ghost" id="planReset">重置打卡</button>
     </div>
     <div class="plan-grid" id="planGrid"></div>
   </section>
@@ -504,9 +486,7 @@ document.getElementById("backTop").addEventListener("click", function(ev){
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
-/* ============ 100天计划 ============ */
-var PLAN_STATE = (function(){ try{ return JSON.parse(localStorage.getItem("plan100")) || {}; }catch(e){ return {}; } })();
-function planSave(){ try{ localStorage.setItem("plan100", JSON.stringify(PLAN_STATE)); }catch(e){} }
+/* ============ 100天计划（后台配置 · 前台只读展示） ============ */
 var planPage = 0, PLAN_PAGE_SIZE = 10;
 function planDayNumber(){
   if(!PLAN.startDate) return 1;
@@ -515,22 +495,6 @@ function planDayNumber(){
   var n = Math.floor((now - start)/86400000) + 1;
   if(n < 1) n = 1; if(n > 100) n = 100;
   return n;
-}
-function planStats(){
-  var doneDays = 0, doneHabits = 0;
-  for(var d=1; d<=100; d++){
-    var day = PLAN_STATE[d] || {};
-    var cnt = PLAN.habits.filter(function(h){ return day[h.name]; }).length;
-    doneHabits += cnt;
-    if(cnt === PLAN.habits.length) doneDays++;
-  }
-  return { doneDays: doneDays, doneHabits: doneHabits, totalHabits: 100*PLAN.habits.length };
-}
-function planRenderStats(){
-  var s = planStats(), today = planDayNumber();
-  document.getElementById("planStatDays").textContent = "已坚持 " + s.doneDays + "/100 天 · 今天是第 " + today + " 天";
-  document.getElementById("planStatHabits").textContent = "完成习惯 " + s.doneHabits + "/" + s.totalHabits + "（" + Math.round(s.doneHabits*100/s.totalHabits) + "%）";
-  document.getElementById("planBarFill").style.width = Math.round(s.doneHabits*100/s.totalHabits) + "%";
 }
 function planRenderGrid(){
   var grid = document.getElementById("planGrid"), today = planDayNumber();
@@ -541,32 +505,22 @@ function planRenderGrid(){
     var card = document.createElement("div");
     card.className = "plan-day" + (d===today ? " today" : "");
     var tag = (d===today) ? '<span class="plan-todaytag">今天</span>' : "";
-    var hh = "";
+    var rows = "";
     PLAN.habits.forEach(function(h){
-      var on = !!(PLAN_STATE[d] && PLAN_STATE[d][h.name]);
-      hh += '<label class="plan-habit"><input type="checkbox" data-day="'+d+'" data-habit="'+encodeURIComponent(h.name)+'"'+(on?' checked':'')+'><span class="box"></span><span class="ht">'+h.name+'</span>'+(h.target?'<span class="htg">'+h.target+'</span>':'')+'</label>';
+      rows += '<div class="plan-row"><span class="ht">'+h.name+'</span>'+(h.target?'<span class="htg">'+h.target+'</span>':'')+'</div>';
     });
-    card.innerHTML = '<div class="plan-daynum"><span>第 '+d+' 天</span>'+tag+'</div>'+hh;
+    card.innerHTML = '<div class="plan-daynum"><span>第 '+d+' 天</span>'+tag+'</div>'+rows;
     grid.appendChild(card);
   }
-  grid.querySelectorAll("input[type=checkbox]").forEach(function(cb){
-    cb.addEventListener("change", function(){
-      var day = parseInt(cb.dataset.day, 10), habit = decodeURIComponent(cb.dataset.habit);
-      var dd = PLAN_STATE[day] = PLAN_STATE[day] || {};
-      if(dd[habit]) delete dd[habit]; else dd[habit] = true;
-      planSave(); planRenderStats();
-    });
-  });
   document.getElementById("planPrev").disabled = (planPage===0);
   document.getElementById("planNext").disabled = (end===100);
 }
 function initPlan(){
   if(!document.getElementById("planGrid")) return;
-  document.getElementById("planDesc").textContent = PLAN.title + "：每日打卡「" + PLAN.habits.map(function(h){return h.name;}).join(" / ") + "」，打勾自动保存。";
+  document.getElementById("planDesc").textContent = PLAN.title + "：每天计划「" + PLAN.habits.map(function(h){return h.name + (h.target ? " " + h.target : "");}).join(" / ") + "」，内容由后台 site-config.json 配置。";
   document.getElementById("planPrev").addEventListener("click", function(){ if(planPage>0){ planPage--; planRenderGrid(); } });
   document.getElementById("planNext").addEventListener("click", function(){ if((planPage+1)*PLAN_PAGE_SIZE<100){ planPage++; planRenderGrid(); } });
-  document.getElementById("planReset").addEventListener("click", function(){ if(confirm("确定清空全部打卡记录吗？此操作不可撤销。")){ PLAN_STATE={}; planSave(); planRenderStats(); planRenderGrid(); } });
-  planRenderStats(); planRenderGrid();
+  planRenderGrid();
 }
 
 /* ============ 初始化 ============ */
