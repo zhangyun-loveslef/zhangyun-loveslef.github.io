@@ -81,7 +81,10 @@ section{padding:60px 0;border-top:1px solid var(--hairline)}
 /* ---------- 关于 ---------- */
 .about-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:40px}
 .about-grid.full{grid-template-columns:1fr}
-.about-text p{color:#D9D6D1;margin-bottom:16px;font-size:15.5px}
+.about-text p{color:#D9D6D1;margin-bottom:14px;font-size:15.5px;line-height:1.85}
+.about-ic{display:inline-flex;vertical-align:-2px;width:18px;height:18px;color:var(--accent);margin-right:7px;flex:none}
+.about-ic svg{width:100%;height:100%}
+.about-k{color:var(--accent);font-family:var(--serif);font-weight:700;margin-right:2px}
 .about-text p:last-child{margin-bottom:0}
 .facts{display:flex;flex-direction:column;gap:12px}
 .fact{display:flex;gap:12px;align-items:baseline;font-size:14px}
@@ -343,7 +346,7 @@ var CONTACT = {
 };
 var ABOUT = {
   desc: "大大方方，真诚坦荡。简简单单，不留遗憾",
-  paragraphs: ["00 后，从湖南永州的小县城一路来到深圳。在大城市里学着独立，学着为自己的选择负责，也学着在快节奏里一点点把自己变好。", "经历过一些低谷，也学会在低谷里安静地重新出发。真正让我改变的，是决定不再将就，先把自己活饱满。", "所以我给了自己一个 100 天：早起、好好吃饭、跑步、力量、喝水、早睡，从 150 斤慢慢减到 126 斤，把身体养回来，也把心养回来。", "我相信成长不是某个突然的顿悟，而是一天天把小事做对。想尽办法取悦自己，大大方方，真诚坦荡，简简单单，不留遗憾。"],
+  paragraphs: ["年龄：00 后，身高：170cm 体重: 73Kg(减肥ing)", "性格：顾家,阳光积极，i人(努力在改变ing) ", "爱好：跑步，散步，常常喜欢大自然吸氧，爬山，旅游，最喜欢的是跟喜欢的人待一块哈哈哈 ", "坐标：常出没于深圳西乡，老家湖南永州江华，一个不知名小县城", "喜欢的话:我相信成长不是某个突然的顿悟，而是一天天把小事做对。想尽办法取悦自己，大大方方，真诚坦荡，简简单单，不留遗憾。"],
   facts: []
 };
 var PLAN = {
@@ -593,7 +596,19 @@ function applyProfile(){
 }
 function applyAbout(){
   document.getElementById("aboutDesc").textContent = ABOUT.desc;
-  document.getElementById("aboutText").innerHTML = ABOUT.paragraphs.map(function(p){ return "<p>"+p+"</p>"; }).join("");
+  var ABOUT_ICONS = {
+    "年龄": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20h14M6 20v-5h12v5M6 15h12v-3a3 3 0 0 0-3-3H9a3 3 0 0 0-3 3v3M9 8V5M12 8V5M15 8V5"/><circle cx="9" cy="3" r="1"/><circle cx="12" cy="3" r="1"/><circle cx="15" cy="3" r="1"/></svg>',
+    "性格": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8.4 14.6a3.7 3.7 0 0 0 7.2 0"/><path d="M9 9.5h.01M15 9.5h.01"/></svg>',
+    "爱好": '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-5.6-7.5-11A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 7.5 3c0 5.4-7.5 11-7.5 11z"/></svg>',
+    "坐标": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21.5S6 16 6 10.5a6 6 0 0 1 12 0c0 5.5-6 11-6 11z"/><circle cx="12" cy="10.5" r="2.4"/></svg>',
+    "喜欢的话": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12H6.5A2.5 2.5 0 0 1 4 9.5V7a2.5 2.5 0 0 1 2.5-2.5H9A2.5 2.5 0 0 1 11.5 7v4c0 2.8-1.2 4.4-3.5 5.5M20 12h-3.5A2.5 2.5 0 0 1 14 9.5V7A2.5 2.5 0 0 1 16.5 4.5H19A2.5 2.5 0 0 1 21.5 7v4c0 2.8-1.2 4.4-3.5 5.5"/></svg>'
+  };
+  function aboutIcon(key){ return ABOUT_ICONS[key] ? '<span class="about-ic">'+ABOUT_ICONS[key]+'</span>' : ""; }
+  document.getElementById("aboutText").innerHTML = ABOUT.paragraphs.map(function(p){
+    var m = p.match(/^([^：:]{1,6})[：:]/);
+    if(m){ return "<p>"+aboutIcon(m[1])+'<span class="about-k">'+m[1]+'：</span>'+p.slice(m[0].length)+"</p>"; }
+    return "<p>"+p+"</p>";
+  }).join("");
   var factsBox = document.getElementById("aboutFacts");
   var facts = ABOUT.facts || [];
   if(facts.length){
