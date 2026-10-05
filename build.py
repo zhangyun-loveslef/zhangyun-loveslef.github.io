@@ -127,7 +127,7 @@ def build_data(cfg, essays):
     lines.append("var ABOUT = {")
     lines.append("  desc: %s," % js_str(a["desc"]))
     lines.append("  paragraphs: [%s]," % ", ".join(js_str(x) for x in a["paragraphs"]))
-    facts = ", ".join("{k:%s,v:%s}" % (js_str(f["k"]), js_str(f["v"])) for f in a["facts"])
+    facts = ", ".join("{k:%s,v:%s}" % (js_str(f["k"]), js_str(f["v"])) for f in a.get("facts", []) or [])
     lines.append("  facts: [%s]" % facts)
     lines.append("};")
     lines.append("var ESSAYS = [")

@@ -80,6 +80,7 @@ section{padding:60px 0;border-top:1px solid var(--hairline)}
 
 /* ---------- 关于 ---------- */
 .about-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:40px}
+.about-grid.full{grid-template-columns:1fr}
 .about-text p{color:#D9D6D1;margin-bottom:16px;font-size:15.5px}
 .about-text p:last-child{margin-bottom:0}
 .facts{display:flex;flex-direction:column;gap:12px}
@@ -213,7 +214,7 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
 
 <footer>
   <div class="footer-inner">
-    <span>© <span id="year"></span> 你的名字 · 用心生活</span>
+    <span>© <span id="year"></span> <span id="footerName">你的名字</span> · 用心生活</span>
     <span>由 <a href="#hero">纯静态 HTML</a> 构建 · <a href="#" id="backTop">回到顶部</a></span>
   </div>
 </footer>
@@ -249,7 +250,7 @@ var CONTACT = {
 var ABOUT = {
   desc: "大大方方，真诚坦荡。简简单单，不留遗憾",
   paragraphs: ["00后，来自湖南永州的一个小县城, 工作于深圳宝安西乡", "失恋ing，计划用100天改变自己，多记录生活"],
-  facts: [{k:"工作",v:"你的职业 / 领域"}, {k:"常做",v:"你的日常或兴趣"}, {k:"坐标",v:"所在城市"}, {k:"喜欢",v:"几件小事"}]
+  facts: []
 };
 var ESSAYS = [
   {
@@ -410,13 +411,21 @@ function applyProfile(){
   document.querySelector(".hero .sub").textContent = PROFILE.sub;
   document.querySelector(".hero .lead").textContent = PROFILE.lead;
   document.title = PROFILE.name + " · 个人主页";
+  document.getElementById("footerName").textContent = PROFILE.name;
 }
 function applyAbout(){
   document.getElementById("aboutDesc").textContent = ABOUT.desc;
   document.getElementById("aboutText").innerHTML = ABOUT.paragraphs.map(function(p){ return "<p>"+p+"</p>"; }).join("");
-  document.getElementById("aboutFacts").innerHTML = ABOUT.facts.map(function(f){
-    return '<div class="fact"><span class="k">'+f.k+'</span><span class="v">'+f.v+'</span></div>';
-  }).join("");
+  var factsBox = document.getElementById("aboutFacts");
+  var facts = ABOUT.facts || [];
+  if(facts.length){
+    factsBox.innerHTML = facts.map(function(f){
+      return '<div class="fact"><span class="k">'+f.k+'</span><span class="v">'+f.v+'</span></div>';
+    }).join("");
+  }else{
+    factsBox.style.display = "none";
+    document.querySelector(".about-grid").classList.add("full");
+  }
 }
 renderFilters();
 renderList();
