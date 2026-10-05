@@ -184,6 +184,8 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
 .plan-habit input:checked + .box{background:var(--accent);border-color:var(--accent)}
 .plan-habit input:checked + .box::after{content:"";width:8px;height:5px;border-left:2px solid #1A1711;border-bottom:2px solid #1A1711;transform:rotate(-45deg) translate(-1px,-1px)}
 .plan-habit input:checked ~ .ht{color:var(--accent)}
+.plan-habit .htg{margin-left:auto;font-size:11px;color:var(--faint);letter-spacing:.3px}
+.plan-habit input:checked ~ .htg{color:var(--muted)}
 @media(max-width:900px){.plan-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:560px){.plan-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
@@ -346,7 +348,7 @@ var ABOUT = {
 var PLAN = {
   title: "100天改变自己",
   startDate: "2026-10-05",
-  habits: ["早起", "跑步", "喝水", "阅读", "早睡"]
+  habits: [{name:"早起",target:"06:30 前"}, {name:"跑步",target:"3 km"}, {name:"喝水",target:"2000 ml"}, {name:"阅读",target:"30 分钟"}, {name:"早睡",target:"23:30 前"}]
 };
 var ESSAYS = [
   {
@@ -518,7 +520,7 @@ function planStats(){
   var doneDays = 0, doneHabits = 0;
   for(var d=1; d<=100; d++){
     var day = PLAN_STATE[d] || {};
-    var cnt = PLAN.habits.filter(function(h){ return day[h]; }).length;
+    var cnt = PLAN.habits.filter(function(h){ return day[h.name]; }).length;
     doneHabits += cnt;
     if(cnt === PLAN.habits.length) doneDays++;
   }
@@ -541,8 +543,8 @@ function planRenderGrid(){
     var tag = (d===today) ? '<span class="plan-todaytag">今天</span>' : "";
     var hh = "";
     PLAN.habits.forEach(function(h){
-      var on = !!(PLAN_STATE[d] && PLAN_STATE[d][h]);
-      hh += '<label class="plan-habit"><input type="checkbox" data-day="'+d+'" data-habit="'+encodeURIComponent(h)+'"'+(on?' checked':'')+'><span class="box"></span><span class="ht">'+h+'</span></label>';
+      var on = !!(PLAN_STATE[d] && PLAN_STATE[d][h.name]);
+      hh += '<label class="plan-habit"><input type="checkbox" data-day="'+d+'" data-habit="'+encodeURIComponent(h.name)+'"'+(on?' checked':'')+'><span class="box"></span><span class="ht">'+h.name+'</span>'+(h.target?'<span class="htg">'+h.target+'</span>':'')+'</label>';
     });
     card.innerHTML = '<div class="plan-daynum"><span>第 '+d+' 天</span>'+tag+'</div>'+hh;
     grid.appendChild(card);
@@ -560,7 +562,7 @@ function planRenderGrid(){
 }
 function initPlan(){
   if(!document.getElementById("planGrid")) return;
-  document.getElementById("planDesc").textContent = PLAN.title + "：每日打卡「" + PLAN.habits.join(" / ") + "」，打勾自动保存。";
+  document.getElementById("planDesc").textContent = PLAN.title + "：每日打卡「" + PLAN.habits.map(function(h){return h.name;}).join(" / ") + "」，打勾自动保存。";
   document.getElementById("planPrev").addEventListener("click", function(){ if(planPage>0){ planPage--; planRenderGrid(); } });
   document.getElementById("planNext").addEventListener("click", function(){ if((planPage+1)*PLAN_PAGE_SIZE<100){ planPage++; planRenderGrid(); } });
   document.getElementById("planReset").addEventListener("click", function(){ if(confirm("确定清空全部打卡记录吗？此操作不可撤销。")){ PLAN_STATE={}; planSave(); planRenderStats(); planRenderGrid(); } });

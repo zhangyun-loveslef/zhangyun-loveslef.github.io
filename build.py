@@ -134,7 +134,13 @@ def build_data(cfg, essays):
     lines.append("var PLAN = {")
     lines.append("  title: %s," % js_str(pl.get("title", "100天计划")))
     lines.append("  startDate: %s," % js_str(pl.get("startDate", "")))
-    lines.append("  habits: [%s]" % ", ".join(js_str(h) for h in pl.get("habits", ["早起", "跑步", "喝水", "阅读", "早睡"])))
+    _habs = []
+    for _h in pl.get("habits", [{"name": "早起", "target": ""}, {"name": "跑步", "target": ""}, {"name": "喝水", "target": ""}, {"name": "阅读", "target": ""}, {"name": "早睡", "target": ""}]):
+        if isinstance(_h, str):
+            _habs.append("{name:%s,target:%s}" % (js_str(_h), js_str("")))
+        else:
+            _habs.append("{name:%s,target:%s}" % (js_str(_h.get("name", "")), js_str(_h.get("target", ""))))
+    lines.append("  habits: [%s]" % ", ".join(_habs))
     lines.append("};")
     lines.append("var ESSAYS = [")
     for i, e in enumerate(essays):

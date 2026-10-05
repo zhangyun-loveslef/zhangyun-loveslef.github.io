@@ -19,6 +19,12 @@
   "plan": {
     "title": "100天改变自己",
     "startDate": "2026-10-05",
-    "habits": ["早起", "跑步", "喝水", "阅读", "早睡"]
+    "habits": [
+      { "name": "早起", "target": "06:30 前" },
+      { "name": "跑步", "target": "3 km" },
+      { "name": "喝水", "target": "2000 ml" },
+      { "name": "阅读", "target": "30 分钟" },
+      { "name": "早睡", "target": "23:30 前" }
+    ]
   }
 }
