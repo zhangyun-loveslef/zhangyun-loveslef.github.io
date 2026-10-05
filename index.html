@@ -391,7 +391,7 @@ function renderList(){
   if(!items.length){
     var d = document.createElement("div");
     d.className = "empty";
-    d.textContent = "这个分类下还没有文章。";
+    d.textContent = "暂无随笔";
     list.appendChild(d);
     return;
   }
@@ -605,14 +605,8 @@ function applyAbout(){
     document.querySelector(".about-grid").classList.add("full");
   }
 }
-if(ESSAYS.length === 0){
-  var es = document.getElementById("essays");
-  if(es) es.style.display = "none";
-  document.querySelectorAll('a[href="#essays"]').forEach(function(a){ a.style.display = "none"; });
-} else {
-  renderFilters();
-  renderList();
-}
+renderFilters();
+renderList();
 setContact();
 applyProfile();
 applyAbout();
