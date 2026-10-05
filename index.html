@@ -174,7 +174,9 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
 .plan-toolbar .btn{padding:8px 15px;font-size:13px}
 .plan-toolbar .btn:disabled{opacity:.4;cursor:not-allowed}
 .plan-pagelabel{font-size:13px;color:var(--muted)}
-.plan-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.plan-grid{display:flex;flex-direction:column;gap:14px}
+.plan-empty{padding:24px;color:var(--muted);font-size:13.5px;border:1px solid var(--hairline);border-radius:12px;text-align:center}
+.plan-recweight{font-family:var(--sans);font-size:10.5px;color:var(--faint)}
 .plan-day{border:1px solid var(--hairline);border-radius:12px;padding:14px 14px 12px;background:var(--surface);transition:.2s}
 .plan-day:hover{border-color:var(--muted)}
 .plan-day.today{border-color:var(--accent)}
@@ -268,11 +270,6 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
     <div class="plan-progress">
       <div class="plan-stats"><span id="planStatDays"></span><span id="planStatHabits"></span></div>
       <div class="plan-bar"><span id="planBarFill"></span></div>
-    </div>
-    <div class="plan-toolbar">
-      <button class="btn btn-ghost" id="planPrev">‹ 上一周</button>
-      <span class="plan-pagelabel" id="planPageLabel"></span>
-      <button class="btn btn-ghost" id="planNext">下一周 ›</button>
     </div>
     <div class="plan-grid" id="planGrid"></div>
     <div class="plan-charthead">体重趋势</div>
@@ -520,34 +517,45 @@ function planRenderTotal(){
   if(sH) sH.textContent = "目标 " + tw + " kg · " + pct + "% · 已完成 " + dayFull + "/100 天";
   if(bar) bar.style.width = pct + "%";
 }
-function planRenderGrid(){
-  var grid = document.getElementById("planGrid"), today = planDayNumber();
-  grid.innerHTML = "";
-  var start = planPage*PLAN_PAGE_SIZE + 1, end = Math.min(start + PLAN_PAGE_SIZE - 1, 100);
-  document.getElementById("planPageLabel").textContent = "第 " + (Math.floor((start-1)/7)+1) + " 周 · 第 " + start + "–" + end + " 天";
-  for(var d=start; d<=end; d++){
-    var ddone = PLAN.done ? PLAN.done[d] : null;
-    var doneAll = (ddone === true);
-    var doneList = doneAll ? PLAN.habits.map(function(h){return h.name;}) : (Array.isArray(ddone) ? ddone : []);
+function planDate(d){
+  if(!PLAN.startDate) return "";
+  var b = new Date(PLAN.startDate.replace(/-/g, "/"));
+  b.setDate(b.getDate() + (d - 1));
+  return (b.getMonth()+1)+"月"+b.getDate()+"日";
+}
+function planRenderRecords(){
+  var grid = document.getElementById("planGrid");
+  if(!grid) return;
+  var today = planDayNumber(), days = [];
+  for(var d=1; d<=100; d++){
+    var dd = PLAN.done ? PLAN.done[d] : null;
+    var hasDone = (dd === true) || (Array.isArray(dd) && dd.length>0);
+    var hasW = !!(PLAN.weights && PLAN.weights[d]);
+    if(hasDone || hasW) days.push(d);
+  }
+  if(days.length === 0){ grid.innerHTML = '<div class="plan-empty">暂无打卡记录</div>'; return; }
+  var html = "";
+  days.forEach(function(d){
+    var dd = PLAN.done ? PLAN.done[d] : null;
+    var doneAll = (dd === true);
+    var doneList = doneAll ? PLAN.habits.map(function(h){return h.name;}) : (Array.isArray(dd) ? dd : []);
+    var w = PLAN.weights ? PLAN.weights[d] : null;
     var isToday = (d===today);
-    var card = document.createElement("div");
-    card.className = "plan-day" + (isToday ? " today" : "") + (doneAll ? " done" : "");
     var tags = "";
     if(isToday) tags += '<span class="plan-todaytag">今天</span>';
     if(doneAll) tags += '<span class="plan-donebadge">√ 已完成</span>';
     else if(doneList.length>0) tags += '<span class="plan-donebadge part">'+doneList.length+'/'+PLAN.habits.length+'</span>';
+    if(w) tags += '<span class="plan-recweight">体重 '+w+' kg</span>';
     var rows = "";
     PLAN.habits.forEach(function(h){
-      var isDone = (doneList.indexOf(h.name) >= 0);
+      if(doneList.indexOf(h.name) < 0) return;
       var rec = (PLAN.records && PLAN.records[d] && PLAN.records[d][h.name]) ? PLAN.records[d][h.name] : "";
-      var disp = (isDone && rec) ? rec : (h.target || "");
-      rows += '<div class="plan-row'+(isDone?' done':'')+'"><span class="ht">'+h.name+'</span>'+(disp?'<span class="htg">'+disp+'</span>':'')+(isDone?'<span class="check">√</span>':'')+'</div>';
+      var disp = rec ? rec : (h.target || "");
+      rows += '<div class="plan-row done"><span class="ht">'+h.name+'</span><span class="htg">'+disp+'</span><span class="check">√</span></div>';
     });
-    card.innerHTML = '<div class="plan-daynum"><span>第 '+d+' 天</span><span class="ptags">'+tags+'</span></div>'+rows;
-    grid.appendChild(card);
-  }
-  document.getElementById("planPrev").disabled = (planPage===0);
-  document.getElementById("planNext").disabled = (end===100);
+    html += '<div class="plan-day'+(isToday?' today':'')+(doneAll?' done':'')+'"><div class="plan-daynum"><span>第 '+d+' 天 · '+planDate(d)+'</span><span class="ptags">'+tags+'</span></div>'+rows+'</div>';
+  });
+  grid.innerHTML = html;
 }
 function planRenderChart(){
   var box = document.getElementById("planChart");
@@ -588,9 +596,7 @@ function planRenderChart(){
 function initPlan(){
   if(!document.getElementById("planGrid")) return;
   document.getElementById("planDesc").textContent = PLAN.title + "：每天计划「" + PLAN.habits.map(function(h){return h.name + (h.target ? " " + h.target : "");}).join(" / ") + "」。";
-  document.getElementById("planPrev").addEventListener("click", function(){ if(planPage>0){ planPage--; planRenderGrid(); } });
-  document.getElementById("planNext").addEventListener("click", function(){ if((planPage+1)*PLAN_PAGE_SIZE<100){ planPage++; planRenderGrid(); } });
-  planRenderTotal(); planRenderGrid(); planRenderChart();
+  planRenderTotal(); planRenderRecords(); planRenderChart();
   window.addEventListener("resize", function(){ var b=document.getElementById("planChart"); if(b && b._chart) b._chart.resize(); });
 }
 
