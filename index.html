@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>你的名字 · 个人主页</title>
+<meta name="description" content="个人简介与生活随笔分享">
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="%2318161B"/><circle cx="32" cy="32" r="15" fill="none" stroke="%23D8A45C" stroke-width="4"/><circle cx="32" cy="32" r="5" fill="%23D8A45C"/></svg>'>
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
+<style>
+:root{
+  --bg:#18161B;
+  --surface:#201E25;
+  --surface2:#26232C;
+  --text:#ECEAE6;
+  --muted:#A7A29B;
+  --faint:#7C776F;
+  --accent:#D8A45C;
+  --accent-soft:rgba(216,164,92,.14);
+  --hairline:rgba(236,234,230,.11);
+  --serif:"Noto Serif SC",Georgia,"Songti SC","SimSun",serif;
+  --sans:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --maxw:820px;
+  --radius:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+html,body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.7;-webkit-font-smoothing:antialiased}
+body{min-height:100vh}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+::selection{background:var(--accent-soft);color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* ---------- 顶部导航 ---------- */
+.site-header{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--hairline)}
+.header-inner{max-width:var(--maxw);margin:0 auto;padding:0 22px;height:60px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-weight:700;font-size:16px}
+.monogram{width:30px;height:30px;border-radius:8px;border:1px solid var(--accent);color:var(--accent);display:grid;place-items:center;font-family:var(--serif);font-weight:700;font-size:14px}
+.nav{display:flex;gap:26px}
+.nav a{color:var(--muted);font-size:14px;position:relative;transition:color .2s}
+.nav a:hover,.nav a[aria-current]{color:var(--text)}
+.nav a[aria-current]::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:2px;background:var(--accent)}
+.menu-btn{display:none;width:38px;height:38px;border:1px solid var(--hairline);border-radius:8px;place-items:center}
+.menu-btn span{display:block;width:16px;height:1.5px;background:var(--text);position:relative;transition:.2s}
+.menu-btn span::before,.menu-btn span::after{content:"";position:absolute;left:0;width:16px;height:1.5px;background:var(--text);transition:.2s}
+.menu-btn span::before{top:-5px}.menu-btn span::after{top:5px}
+.menu-btn.open span{background:transparent}
+.menu-btn.open span::before{top:0;transform:rotate(45deg)}
+.menu-btn.open span::after{top:0;transform:rotate(-45deg)}
+@media(max-width:640px){
+  .nav{position:fixed;top:60px;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--hairline);flex-direction:column;gap:0;padding:8px 22px;display:none}
+  .nav.open{display:flex}
+  .nav a{padding:14px 0;border-bottom:1px solid var(--hairline)}
+  .menu-btn{display:grid}
+}
+
+main{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+
+/* ---------- Hero ---------- */
+.hero{padding:86px 0 60px}
+.hero-avatar{width:84px;height:84px;border-radius:50%;border:1px solid var(--accent);display:grid;place-items:center;font-family:var(--serif);font-size:30px;color:var(--accent);margin-bottom:26px}
+.hero h1{font-family:var(--serif);font-size:clamp(34px,6vw,54px);font-weight:700;line-height:1.2;letter-spacing:.5px}
+.hero .sub{font-family:var(--serif);color:var(--accent);font-size:19px;margin-top:14px;font-weight:600}
+.hero .lead{color:var(--muted);font-size:16px;max-width:600px;margin-top:22px}
+.hero-cta{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:999px;font-size:14px;transition:.2s}
+.btn-primary{background:var(--accent);color:#1A1711;font-weight:600}
+.btn-primary:hover{background:#E4B572}
+.btn-ghost{border:1px solid var(--hairline);color:var(--text)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ---------- 区块通用 ---------- */
+section{padding:60px 0;border-top:1px solid var(--hairline)}
+.sec-head{margin-bottom:34px}
+.sec-eyebrow{font-size:12px;letter-spacing:2px;color:var(--accent);text-transform:uppercase}
+.sec-title{font-family:var(--serif);font-size:28px;font-weight:700;margin-top:8px}
+.sec-desc{color:var(--muted);font-size:15px;margin-top:12px;max-width:640px}
+
+/* ---------- 关于 ---------- */
+.about-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:40px}
+.about-text p{color:#D9D6D1;margin-bottom:16px;font-size:15.5px}
+.about-text p:last-child{margin-bottom:0}
+.facts{display:flex;flex-direction:column;gap:12px}
+.fact{display:flex;gap:12px;align-items:baseline;font-size:14px}
+.fact .k{color:var(--accent);font-family:var(--serif);min-width:78px;font-weight:600}
+.fact .v{color:var(--muted)}
+@media(max-width:720px){.about-grid{grid-template-columns:1fr}}
+
+/* ---------- 随笔 ---------- */
+.filter{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px}
+.chip{padding:7px 16px;border-radius:999px;border:1px solid var(--hairline);font-size:13px;color:var(--muted);transition:.2s}
+.chip:hover{color:var(--text);border-color:var(--muted)}
+.chip.active{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.note{font-size:12.5px;color:var(--faint);background:var(--surface);border:1px dashed var(--hairline);border-radius:8px;padding:10px 14px;margin-bottom:22px}
+.essay-list{display:flex;flex-direction:column}
+.essay{display:block;text-align:left;width:100%;padding:22px 4px;border-bottom:1px solid var(--hairline);transition:background .2s;border-radius:8px}
+.essay:hover{background:var(--surface)}
+.essay-top{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.essay-tag{font-size:11.5px;color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:2px 10px}
+.essay-date{font-size:12.5px;color:var(--faint)}
+.essay h3{font-family:var(--serif);font-size:19px;font-weight:600;transition:color .2s}
+.essay:hover h3{color:var(--accent)}
+.essay p{color:var(--muted);font-size:14px;margin-top:6px;max-width:680px}
+.empty{color:var(--faint);padding:30px 0;text-align:center}
+
+/* ---------- 联系 ---------- */
+.contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.contact-card{border:1px solid var(--hairline);border-radius:var(--radius);padding:22px;display:flex;align-items:center;gap:14px;transition:.2s}
+.contact-card:hover{border-color:var(--accent);background:var(--surface)}
+.contact-card svg{flex:none}
+.contact-card .label{font-size:13px;color:var(--faint)}
+.contact-card .value{font-size:15px;color:var(--text);margin-top:2px;word-break:break-all}
+
+/* ---------- 阅读弹层 ---------- */
+.reader{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
+.reader.open{display:flex}
+.overlay{position:absolute;inset:0;background:rgba(10,9,12,.72);backdrop-filter:blur(4px)}
+.reader-panel{position:relative;width:100%;max-width:680px;max-height:88vh;overflow-y:auto;background:var(--surface);border:1px solid var(--hairline);border-radius:14px;padding:40px 42px}
+.reader-close{position:absolute;top:16px;right:18px;width:34px;height:34px;border-radius:8px;border:1px solid var(--hairline);display:grid;place-items:center;transition:.2s}
+.reader-close:hover{border-color:var(--accent);color:var(--accent)}
+.reader-meta{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.reader-title{font-family:var(--serif);font-size:26px;font-weight:700;line-height:1.35;margin-bottom:20px}
+.reader-body{font-family:var(--serif);font-size:16.5px;line-height:2;color:#DDD9D3}
+.reader-body p{margin-bottom:18px}
+@media(max-width:640px){.reader-panel{padding:28px 22px}}
+
+/* ---------- 页脚 ---------- */
+footer{border-top:1px solid var(--hairline);margin-top:40px}
+.footer-inner{max-width:var(--maxw);margin:0 auto;padding:30px 22px;display:flex;align-items:center;justify-content:space-between;color:var(--faint);font-size:13px;flex-wrap:wrap;gap:12px}
+.footer-inner a{color:var(--muted)}
+.footer-inner a:hover{color:var(--accent)}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="#hero"><span class="monogram" id="monogram">名</span><span>你的名字</span></a>
+    <button class="menu-btn" id="menuBtn" aria-label="打开菜单" aria-expanded="false" aria-controls="navMenu"><span></span></button>
+    <nav class="nav" id="navMenu">
+      <a href="#about">关于</a>
+      <a href="#essays">随笔</a>
+      <a href="#contact">联系</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- ===== 视图：Hero ===== -->
+  <section class="hero" id="hero">
+    <div class="hero-avatar" id="heroAvatar">名</div>
+    <h1>你的名字</h1>
+    <div class="sub">一句话介绍你自己</div>
+    <p class="lead">在这里写一句能概括你的话——比如你的职业、你在做的事，或是你希望别人记住你的方式。保持简单真诚，这一行会出现在网站最显眼的位置。</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="#essays">阅读随笔</a>
+      <a class="btn btn-ghost" href="#contact">联系我</a>
+    </div>
+  </section>
+
+  <!-- ===== 视图：关于 ===== -->
+  <section id="about">
+    <div class="sec-head">
+      <div class="sec-eyebrow">About</div>
+      <h2 class="sec-title">关于我</h2>
+      <p class="sec-desc">把你的个人简介写在这里，两三段即可，真诚比华丽更重要。</p>
+    </div>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>第一段：简单介绍你是谁、在做什么。例如——「我是一名工程师，白天和硬件与代码打交道，晚上喜欢读书、跑步、偶尔写点随笔。」（这段文字只是占位示例，请替换成你自己的介绍。）</p>
+        <p>第二段：可以聊聊你的兴趣、你正在做的事，或者你相信什么。让读到的人觉得认识了你这个人，而不只是一份简历。</p>
+        <p>第三段（可选）：补充任何想说的话，或邀请读者做某件事——关注你的作品、给你写信、一起喝杯咖啡。</p>
+      </div>
+      <div class="facts">
+        <div class="fact"><span class="k">工作</span><span class="v">你的职业 / 领域</span></div>
+        <div class="fact"><span class="k">常做</span><span class="v">你的日常或兴趣</span></div>
+        <div class="fact"><span class="k">坐标</span><span class="v">所在城市</span></div>
+        <div class="fact"><span class="k">喜欢</span><span class="v">几件小事</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 视图：随笔 ===== -->
+  <section id="essays">
+    <div class="sec-head">
+      <div class="sec-eyebrow">Essays</div>
+      <h2 class="sec-title">生活随笔</h2>
+      <p class="sec-desc">记录生活里的一些碎片与想法。点击任意一篇可展开阅读。</p>
+    </div>
+    <div class="note">以下 4 篇为示例文章，方便你看到排版效果。替换时直接修改页面底部 <code>&lt;script&gt;</code> 里的 <code>ESSAYS</code> 数组即可。</div>
+    <div class="filter" id="filter" role="tablist" aria-label="按标签筛选随笔"></div>
+    <div class="essay-list" id="essayList"></div>
+  </section>
+
+  <!-- ===== 视图：联系 ===== -->
+  <section id="contact">
+    <div class="sec-head">
+      <div class="sec-eyebrow">Contact</div>
+      <h2 class="sec-title">联系我</h2>
+      <p class="sec-desc">欢迎交流，把联系方式替换成你自己的。</p>
+    </div>
+    <div class="contact-grid">
+      <a class="contact-card" id="cardEmail" href="#contact">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#D8A45C" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+        <span><div class="label">邮箱 Email</div><div class="value" id="emailValue">you@example.com</div></span>
+      </a>
+      <a class="contact-card" id="cardGithub" href="#contact">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#D8A45C" stroke-width="1.6"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12 12 0 0 0-6.2 0C6.5 2.6 5.4 2.9 5.4 2.9a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.3c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg>
+        <span><div class="label">GitHub</div><div class="value" id="githubValue">github.com/你的用户名</div></span>
+      </a>
+      <a class="contact-card" id="cardSite" href="#hero">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#D8A45C" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.9 5.7 3.9 9S14.5 18.4 12 21c-2.5-2.6-3.9-5.7-3.9-9S9.5 5.6 12 3Z"/></svg>
+        <span><div class="label">个人站点</div><div class="value" id="siteValue">https://你的域名</div></span>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <span>© <span id="year"></span> 你的名字 · 用心生活</span>
+    <span>由 <a href="#hero">纯静态 HTML</a> 构建 · <a href="#" id="backTop">回到顶部</a></span>
+  </div>
+</footer>
+
+<!-- ===== 阅读弹层 ===== -->
+<div class="reader" id="reader" role="dialog" aria-modal="true" aria-labelledby="readerTitle">
+  <div class="overlay" id="readerOverlay"></div>
+  <div class="reader-panel">
+    <button class="reader-close" id="readerClose" aria-label="关闭"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="reader-meta">
+      <span class="essay-tag" id="readerTag"></span>
+      <span class="essay-date" id="readerDate"></span>
+    </div>
+    <h3 class="reader-title" id="readerTitle"></h3>
+    <div class="reader-body" id="readerBody"></div>
+  </div>
+</div>
+
+
+<script>
+/* ============ 可编辑配置：把下面的内容替换成你自己的 ============ */
+var PROFILE = {
+  name: "你的名字",
+  monogram: "名",
+  sub: "一句话介绍你自己",
+  lead: "在这里写一句能概括你的话——比如你的职业、你在做的事，或是你希望别人记住你的方式。保持简单真诚，这一行会出现在网站最显眼的位置。"
+};
+var CONTACT = {
+  email: "you@example.com",
+  github: "github.com/你的用户名",
+  site: "https://你的域名"
+};
+
+/* ============ 随笔数据：每篇含 title/date/tag/excerpt/content ============ */
+var ESSAYS = [
+  {
+    title: "慢下来的时光",
+    date: "2026-09-20",
+    tag: "生活",
+    excerpt: "周末把手机丢在一边，去菜市场慢慢挑了两把青菜，回来煮了碗面。忽然发现，慢下来以后，时间的质感完全不同。",
+    content: [
+      "周末把手机丢在一边，去菜市场慢慢挑了两把青菜，回来煮了碗面。忽然发现，慢下来以后，时间的质感完全不同。",
+      "我们总被催促着快一点、再快一点，可真正值得回味的东西，往往都发生在慢里。一顿认真做的饭，一次没有目的的散步，一段不被打断的对话。",
+      "这不是什么了不起的发现，但我想把它记下来，提醒自己：生活不在别处，就在这些被忽略的片刻里。",
+      "（本文为示例文章，请在下方数组中替换为你的随笔。）"
+    ]
+  },
+  {
+    title: "深夜里的代码",
+    date: "2026-08-14",
+    tag: "工作",
+    excerpt: "凌晨一点，盯着屏幕上一行怎么都不对的数据。调试的尽头往往不是技术问题，而是耐心与自己的和解。",
+    content: [
+      "凌晨一点，盯着屏幕上一行怎么都不对的数据。调试的尽头往往不是技术问题，而是耐心与自己的和解。",
+      "做了很多年，我越来越相信：写代码这件事，七分是逻辑，三分是心性。再难的 bug，只要肯静下来一行行拆，总会有答案。",
+      "真正难的，是在持续失败的时候还愿意保持冷静，把每一次报错当成线索，而不是当成打击。",
+      "（本文为示例文章，请在下方数组中替换为你的随笔。）"
+    ]
+  },
+  {
+    title: "城市与远山",
+    date: "2026-06-08",
+    tag: "旅行",
+    excerpt: "偶尔从高楼的缝隙里看见远处的山，心里会松一口气。原来在这个城市里，一直有一片山等着我。",
+    content: [
+      "偶尔从高楼的缝隙里看见远处的山，心里会松一口气。原来在这个城市里，一直有一片山等着我。",
+      "趁着假期去了趟山里。没有信号，没有日程，只有风、树影和走不完的路。走到半山腰的时候，忽然觉得一年里所有的疲惫都被卸下了。",
+      "回来后我常想，人大概需要时不时离开一下，才能更清楚地知道自己为什么出发。",
+      "（本文为示例文章，请在下方数组中替换为你的随笔。）"
+    ]
+  },
+  {
+    title: "读书记",
+    date: "2026-04-02",
+    tag: "阅读",
+    excerpt: "书读到一半合上，发呆很久。好的文字从不急着告诉你答案，它只是在你心里种下一颗种子，等它自己发芽。",
+    content: [
+      "书读到一半合上，发呆很久。好的文字从不急着告诉你答案，它只是在你心里种下一颗种子，等它自己发芽。",
+      "这一年读的书不多，但每一本都留下了点什么。有的改变了我的想法，有的只是陪伴我度过了一段安静的时间。",
+      "我慢慢不再追求「读完多少本」，而是更在意「被哪一句打动」。阅读的意义，大概就在这里。",
+      "（本文为示例文章，请在下方数组中替换为你的随笔。）"
+    ]
+  }
+];
+
+/* ============ 渲染 ============ */
+function renderFilters(){
+  var tags = ["全部"];
+  ESSAYS.forEach(function(e){ if(tags.indexOf(e.tag)===-1) tags.push(e.tag); });
+  var box = document.getElementById("filter");
+  box.innerHTML = "";
+  tags.forEach(function(t){
+    var b = document.createElement("button");
+    b.className = "chip" + (t==="全部" ? " active" : "");
+    b.textContent = t;
+    b.dataset.tag = t;
+    b.setAttribute("role","tab");
+    b.addEventListener("click", function(){ setFilter(t); });
+    box.appendChild(b);
+  });
+}
+
+var currentTag = "全部";
+function setFilter(tag){
+  currentTag = tag;
+  var chips = document.querySelectorAll(".chip");
+  chips.forEach(function(c){ c.classList.toggle("active", c.dataset.tag===tag); });
+  renderList();
+}
+
+function renderList(){
+  var list = document.getElementById("essayList");
+  list.innerHTML = "";
+  var items = ESSAYS.filter(function(e){ return currentTag==="全部" || e.tag===currentTag; });
+  if(!items.length){
+    var d = document.createElement("div");
+    d.className = "empty";
+    d.textContent = "这个分类下还没有文章。";
+    list.appendChild(d);
+    return;
+  }
+  items.forEach(function(e){
+    var a = document.createElement("button");
+    a.className = "essay";
+    a.innerHTML =
+      '<span class="essay-top"><span class="essay-tag">'+e.tag+'</span><span class="essay-date">'+e.date+'</span></span>'+
+      '<h3>'+e.title+'</h3><p>'+e.excerpt+'</p>';
+    a.addEventListener("click", function(){ openReader(e); });
+    list.appendChild(a);
+  });
+}
+
+/* ============ 阅读弹层 ============ */
+var reader = document.getElementById("reader");
+function openReader(e){
+  document.getElementById("readerTag").textContent = e.tag;
+  document.getElementById("readerDate").textContent = e.date;
+  document.getElementById("readerTitle").textContent = e.title;
+  document.getElementById("readerBody").innerHTML = e.content.map(function(p){ return "<p>"+p+"</p>"; }).join("");
+  reader.classList.add("open");
+  document.body.style.overflow = "hidden";
+  document.getElementById("readerClose").focus();
+}
+function closeReader(){
+  reader.classList.remove("open");
+  document.body.style.overflow = "";
+}
+document.getElementById("readerClose").addEventListener("click", closeReader);
+document.getElementById("readerOverlay").addEventListener("click", closeReader);
+document.addEventListener("keydown", function(ev){
+  if(ev.key === "Escape" && reader.classList.contains("open")) closeReader();
+});
+
+/* ============ 移动端菜单 ============ */
+var menuBtn = document.getElementById("menuBtn");
+var navMenu = document.getElementById("navMenu");
+menuBtn.addEventListener("click", function(){
+  var open = navMenu.classList.toggle("open");
+  menuBtn.classList.toggle("open", open);
+  menuBtn.setAttribute("aria-expanded", open);
+  menuBtn.setAttribute("aria-label", open ? "关闭菜单" : "打开菜单");
+});
+navMenu.addEventListener("click", function(ev){
+  if(ev.target.tagName === "A" && navMenu.classList.contains("open")){
+    navMenu.classList.remove("open");
+    menuBtn.classList.remove("open");
+    menuBtn.setAttribute("aria-expanded","false");
+  }
+});
+
+/* ============ 滚动高亮导航 ============ */
+var sections = ["about","essays","contact"];
+var navLinks = document.querySelectorAll(".nav a");
+var sectionEls = sections.map(function(id){ return document.getElementById(id); });
+var inView = {};
+var observer = new IntersectionObserver(function(entries){
+  entries.forEach(function(en){
+    inView[en.target.id] = en.isIntersecting;
+  });
+  var current = sections.filter(function(id){ return inView[id]; }).pop();
+  if(current){
+    navLinks.forEach(function(a){ a.toggleAttribute("aria-current", a.getAttribute("href") === "#"+current); });
+  }
+}, { rootMargin: "-40% 0px -55% 0px" });
+sectionEls.forEach(function(s){ if(s) observer.observe(s); });
+
+/* ============ 联系卡片：把占位链接替换为真实地址 ============ */
+function setContact(){
+  document.getElementById("emailValue").textContent = CONTACT.email;
+  document.getElementById("githubValue").textContent = CONTACT.github;
+  document.getElementById("siteValue").textContent = CONTACT.site;
+  document.getElementById("cardEmail").href = "mailto:"+CONTACT.email;
+  document.getElementById("cardGithub").href = "https://"+CONTACT.github;
+  document.getElementById("cardSite").href = CONTACT.site;
+}
+
+/* ============ 页脚年份 / 回到顶部 ============ */
+document.getElementById("year").textContent = new Date().getFullYear();
+document.getElementById("backTop").addEventListener("click", function(ev){
+  ev.preventDefault();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+/* ============ 初始化 ============ */
+function applyProfile(){
+  document.querySelector(".brand span:last-child").textContent = PROFILE.name;
+  document.getElementById("monogram").textContent = PROFILE.monogram;
+  document.getElementById("heroAvatar").textContent = PROFILE.monogram;
+  document.querySelector(".hero h1").textContent = PROFILE.name;
+  document.querySelector(".hero .sub").textContent = PROFILE.sub;
+  document.querySelector(".hero .lead").textContent = PROFILE.lead;
+  document.title = PROFILE.name + " · 个人主页";
+}
+renderFilters();
+renderList();
+setContact();
+applyProfile();
+</script>
+</body>
+</html>
