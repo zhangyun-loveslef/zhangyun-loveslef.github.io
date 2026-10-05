@@ -195,6 +195,8 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
 .plan-donebadge.part{color:var(--muted);background:var(--surface2);border:1px solid var(--hairline)}
 @media(max-width:900px){.plan-grid{grid-template-columns:repeat(3,1fr)}}
 .plan-charthead{font-family:var(--serif);font-size:14px;font-weight:600;color:var(--text);margin:22px 0 10px}
+.plan-cute{max-width:640px;margin:6px auto 2px;border:1px solid var(--hairline);border-radius:16px;overflow:hidden;background:var(--surface);box-shadow:0 12px 32px rgba(0,0,0,.28)}
+.plan-cute img{display:block;width:100%;height:auto}
 .plan-chart{width:100%;height:auto;border:1px solid var(--hairline);border-radius:12px;background:var(--surface);overflow:hidden}
 .plan-chart-empty{padding:28px;color:var(--muted);font-size:13px;text-align:center;line-height:1.7}
 @media(max-width:560px){.plan-grid{grid-template-columns:repeat(2,1fr)}}
@@ -273,6 +275,7 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
       <div class="plan-bar"><span id="planBarFill"></span></div>
     </div>
     <div class="plan-grid" id="planGrid"></div>
+    <div class="plan-cute" id="planCute"><img id="planCuteImg" src="images/cute-1.jpg" alt="治愈小插画" loading="lazy"></div>
     <div class="plan-charthead">体重趋势</div>
     <div class="plan-chart" id="planChart"></div>
   </section>
@@ -599,6 +602,9 @@ function initPlan(){
   if(!document.getElementById("planGrid")) return;
   document.getElementById("planDesc").textContent = PLAN.title + "：每天计划「" + PLAN.habits.map(function(h){return h.name + (h.target ? " " + h.target : "");}).join(" / ") + "」。";
   planRenderTotal(); planRenderRecords(); planRenderChart();
+  var cuties = ["images/cute-1.jpg","images/cute-2.jpg","images/cute-3.jpg"];
+  var cImg = document.getElementById("planCuteImg");
+  if(cImg) cImg.src = cuties[Math.floor(Math.random()*cuties.length)];
   window.addEventListener("resize", function(){ var b=document.getElementById("planChart"); if(b && b._chart) b._chart.resize(); });
 }
 
