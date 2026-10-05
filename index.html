@@ -171,9 +171,15 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
 .plan-daynum{font-family:var(--serif);font-size:13.5px;font-weight:600;margin-bottom:9px;color:var(--text);display:flex;align-items:center;justify-content:space-between}
 .plan-day.today .plan-daynum{color:var(--accent)}
 .plan-todaytag{font-family:var(--sans);font-size:10.5px;color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:1px 7px}
-.plan-row{display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-size:13px;color:var(--muted);padding:4.5px 0;border-bottom:1px dashed var(--hairline)}
+.plan-row{display:flex;align-items:baseline;gap:8px;font-size:13px;color:var(--muted);padding:4.5px 0;border-bottom:1px dashed var(--hairline)}
 .plan-row:last-child{border-bottom:none}
 .plan-row .htg{margin-left:auto;font-size:11px;color:var(--faint);letter-spacing:.3px;white-space:nowrap}
+.plan-row.done .ht{color:var(--accent)}
+.plan-row .check{font-size:13px;line-height:1;color:var(--accent);font-weight:700}
+.plan-day.done{border-color:var(--accent)}
+.plan-daynum .ptags{display:inline-flex;gap:6px}
+.plan-donebadge{font-family:var(--sans);font-size:10.5px;color:#1A1711;background:var(--accent);border-radius:999px;padding:1px 7px}
+.plan-donebadge.part{color:var(--muted);background:var(--surface2);border:1px solid var(--hairline)}
 @media(max-width:900px){.plan-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:560px){.plan-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
@@ -330,7 +336,8 @@ var ABOUT = {
 var PLAN = {
   title: "100天改变自己",
   startDate: "2026-10-05",
-  habits: [{name:"早起",target:"06:30 前"}, {name:"跑步",target:"3 km"}, {name:"喝水",target:"2000 ml"}, {name:"阅读",target:"30 分钟"}, {name:"早睡",target:"23:30 前"}]
+  habits: [{name:"早起",target:"06:30 前"}, {name:"跑步",target:"3 km"}, {name:"喝水",target:"2000 ml"}, {name:"阅读",target:"30 分钟"}, {name:"早睡",target:"23:30 前"}],
+  done: {}
 };
 var ESSAYS = [
   {
@@ -502,14 +509,22 @@ function planRenderGrid(){
   var start = planPage*PLAN_PAGE_SIZE + 1, end = Math.min(start + PLAN_PAGE_SIZE - 1, 100);
   document.getElementById("planPageLabel").textContent = "第 " + start + "–" + end + " 天";
   for(var d=start; d<=end; d++){
+    var ddone = PLAN.done ? PLAN.done[d] : null;
+    var doneAll = (ddone === true);
+    var doneList = doneAll ? PLAN.habits.map(function(h){return h.name;}) : (Array.isArray(ddone) ? ddone : []);
+    var isToday = (d===today);
     var card = document.createElement("div");
-    card.className = "plan-day" + (d===today ? " today" : "");
-    var tag = (d===today) ? '<span class="plan-todaytag">今天</span>' : "";
+    card.className = "plan-day" + (isToday ? " today" : "") + (doneAll ? " done" : "");
+    var tags = "";
+    if(isToday) tags += '<span class="plan-todaytag">今天</span>';
+    if(doneAll) tags += '<span class="plan-donebadge">√ 已完成</span>';
+    else if(doneList.length>0) tags += '<span class="plan-donebadge part">'+doneList.length+'/'+PLAN.habits.length+'</span>';
     var rows = "";
     PLAN.habits.forEach(function(h){
-      rows += '<div class="plan-row"><span class="ht">'+h.name+'</span>'+(h.target?'<span class="htg">'+h.target+'</span>':'')+'</div>';
+      var isDone = (doneList.indexOf(h.name) >= 0);
+      rows += '<div class="plan-row'+(isDone?' done':'')+'"><span class="ht">'+h.name+'</span>'+(h.target?'<span class="htg">'+h.target+'</span>':'')+(isDone?'<span class="check">√</span>':'')+'</div>';
     });
-    card.innerHTML = '<div class="plan-daynum"><span>第 '+d+' 天</span>'+tag+'</div>'+rows;
+    card.innerHTML = '<div class="plan-daynum"><span>第 '+d+' 天</span><span class="ptags">'+tags+'</span></div>'+rows;
     grid.appendChild(card);
   }
   document.getElementById("planPrev").disabled = (planPage===0);

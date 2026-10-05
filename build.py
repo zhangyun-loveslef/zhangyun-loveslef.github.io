@@ -140,7 +140,15 @@ def build_data(cfg, essays):
             _habs.append("{name:%s,target:%s}" % (js_str(_h), js_str("")))
         else:
             _habs.append("{name:%s,target:%s}" % (js_str(_h.get("name", "")), js_str(_h.get("target", ""))))
-    lines.append("  habits: [%s]" % ", ".join(_habs))
+    lines.append("  habits: [%s]," % ", ".join(_habs))
+    _done = pl.get("done", {}) or {}
+    _done_parts = []
+    for _dk, _dv in _done.items():
+        if isinstance(_dv, (list, tuple)):
+            _done_parts.append("%s:[%s]" % (_dk, ", ".join(js_str(x) for x in _dv)))
+        else:
+            _done_parts.append("%s:true" % _dk)
+    lines.append("  done: {%s}" % ", ".join(_done_parts))
     lines.append("};")
     lines.append("var ESSAYS = [")
     for i, e in enumerate(essays):
