@@ -203,7 +203,6 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
 <div class="layout">
   <aside class="side">
     <img class="side-avatar" src="images/avatar.jpg" alt="小张同学">
-    <a class="side-brand" href="#hero"><span class="monogram">名</span></a>
     <h2 class="side-name name-el">你的名字</h2>
     <p class="side-sub sub-el">一句话介绍你自己</p>
     <p class="side-lead lead-el">在这里写一句能概括你的话——比如你的职业、你在做的事，或是你希望别人记住你的方式。保持简单真诚，这一行会出现在网站最显眼的位置。</p>
@@ -222,7 +221,7 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
   <div class="layout-right">
 <header class="site-header">
   <div class="header-inner">
-    <a class="brand" href="#hero"><span class="monogram" id="monogram">名</span><span>你的名字</span></a>
+    <a class="brand" href="#hero"><span class="name-el">你的名字</span></a>
     <button class="menu-btn" id="menuBtn" aria-label="打开菜单" aria-expanded="false" aria-controls="navMenu"><span></span></button>
     <nav class="nav" id="navMenu">
       <a href="#about">关于</a>
@@ -339,7 +338,7 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
 /* ===== SITE-DATA-START ===== */
 var PROFILE = {
   name: "小张同学",
-  monogram: "云",
+  monogram: "",
   sub: "想尽办法去取悦自己",
   lead: "100天重启我的人生！"
 };
@@ -589,7 +588,6 @@ function initPlan(){
 /* ============ 初始化 ============ */
 function applyProfile(){
   document.querySelectorAll(".brand span:last-child").forEach(function(e){ e.textContent = PROFILE.name; });
-  document.querySelectorAll(".monogram").forEach(function(e){ e.textContent = PROFILE.monogram; });
   var ha = document.getElementById("heroAvatar");
   if(ha && !ha.querySelector("img")) ha.textContent = PROFILE.monogram;
   document.querySelectorAll(".name-el").forEach(function(e){ e.textContent = PROFILE.name; });
