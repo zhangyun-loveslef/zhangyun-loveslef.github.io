@@ -20,7 +20,7 @@
     ]
   },
   "plan": {
-    "title": "100天重启人生计划（150→126斤）",
+    "title": "100天重启人生计划（75→63kg）",
     "startDate": "2026-10-05",
     "habits": [
       { "name": "早起", "target": "06:00 前" },
@@ -30,8 +30,8 @@
       { "name": "喝水", "target": "3000 ml" },
       { "name": "早睡", "target": "23:00 前" }
     ],
-    "startWeight": 150,
-    "targetWeight": 126,
+    "startWeight": 75,
+    "targetWeight": 63,
     "weights": {},
     "done": {}
   }

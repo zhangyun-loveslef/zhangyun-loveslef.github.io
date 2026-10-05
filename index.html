@@ -351,13 +351,14 @@ var ABOUT = {
   facts: []
 };
 var PLAN = {
-  title: "100天重启人生计划（150→126斤）",
+  title: "100天重启人生计划（75→63kg）",
   startDate: "2026-10-05",
   habits: [{name:"早起",target:"06:00 前"}, {name:"饮食",target:"≤1800 千卡"}, {name:"有氧",target:"4 km 跑步"}, {name:"力量",target:"20 分钟"}, {name:"喝水",target:"3000 ml"}, {name:"早睡",target:"23:00 前"}],
-  startWeight: 150,
-  targetWeight: 126,
-  weights: {},
-  done: {}
+  startWeight: 75,
+  targetWeight: 63,
+  weights: {1:74},
+  done: {1:["力量", "喝水", "早睡", "早起", "有氧"]},
+  records: {1:{"早起":"6:00", "有氧":"5KM", "力量":"俯卧撑20个", "喝水":"2000ML", "早睡":"23:00"}}
 };
 var ESSAYS = [
   {
@@ -515,8 +516,8 @@ function planRenderTotal(){
     else if(Array.isArray(dd) && dd.length>0){ habitDone += dd.length; if(dd.length===PLAN.habits.length) dayFull++; }
   }
   var sD = document.getElementById("planStatDays"), sH = document.getElementById("planStatHabits"), bar = document.getElementById("planBarFill");
-  if(sD) sD.textContent = "体重 " + cur + " 斤 · 已减 " + lost + "/" + total + " 斤";
-  if(sH) sH.textContent = "目标 " + tw + " 斤 · " + pct + "% · 已完成 " + dayFull + "/100 天";
+  if(sD) sD.textContent = "体重 " + cur + " kg · 已减 " + lost + "/" + total + " kg";
+  if(sH) sH.textContent = "目标 " + tw + " kg · " + pct + "% · 已完成 " + dayFull + "/100 天";
   if(bar) bar.style.width = pct + "%";
 }
 function planRenderGrid(){
@@ -538,7 +539,9 @@ function planRenderGrid(){
     var rows = "";
     PLAN.habits.forEach(function(h){
       var isDone = (doneList.indexOf(h.name) >= 0);
-      rows += '<div class="plan-row'+(isDone?' done':'')+'"><span class="ht">'+h.name+'</span>'+(h.target?'<span class="htg">'+h.target+'</span>':'')+(isDone?'<span class="check">√</span>':'')+'</div>';
+      var rec = (PLAN.records && PLAN.records[d] && PLAN.records[d][h.name]) ? PLAN.records[d][h.name] : "";
+      var disp = (isDone && rec) ? rec : (h.target || "");
+      rows += '<div class="plan-row'+(isDone?' done':'')+'"><span class="ht">'+h.name+'</span>'+(disp?'<span class="htg">'+disp+'</span>':'')+(isDone?'<span class="check">√</span>':'')+'</div>';
     });
     card.innerHTML = '<div class="plan-daynum"><span>第 '+d+' 天</span><span class="ptags">'+tags+'</span></div>'+rows;
     grid.appendChild(card);
@@ -564,10 +567,10 @@ function planRenderChart(){
     animation:false,
     grid:{left:48,right:20,top:30,bottom:30},
     tooltip:{trigger:'axis', backgroundColor:'#221f1a', borderColor:'#3a3630', textStyle:{color:'#e9e4da', fontSize:12},
-      formatter:function(p){ return '第 '+p[0].value[0]+' 天 &nbsp;·&nbsp; '+p[0].value[1]+' 斤'; }},
+      formatter:function(p){ return '第 '+p[0].value[0]+' 天 &nbsp;·&nbsp; '+p[0].value[1]+' kg'; }},
     xAxis:{ type:'category', data: pts.map(function(p){return '第'+p[0]+'天';}),
       axisLabel:{color:'#9a958c', fontSize:11}, axisLine:{lineStyle:{color:'#3a3630'}}, axisTick:{show:false} },
-    yAxis:{ type:'value', min: Math.floor(tw-2), max: Math.ceil(sw+2), name:'斤', nameTextStyle:{color:'#9a958c', fontSize:11, padding:[0,0,0,-30]},
+    yAxis:{ type:'value', min: Math.floor(tw-2), max: Math.ceil(sw+2), name:'kg', nameTextStyle:{color:'#9a958c', fontSize:11, padding:[0,0,0,-30]},
       axisLabel:{color:'#9a958c', fontSize:11}, splitLine:{lineStyle:{color:'#2c2822'}} },
     series:[{
       type:'line', smooth:true, symbolSize:7, data: pts,
@@ -576,8 +579,8 @@ function planRenderChart(){
       areaStyle:{ color:'rgba(216,164,92,0.12)' },
       markLine:{ silent:true, symbol:'none',
         data:[
-          { yAxis: tw, label:{formatter:'目标 '+tw+' 斤', color:'#D8A45C', fontSize:11, position:'insideEndTop'}, lineStyle:{color:'#D8A45C', type:'dashed', width:1} },
-          { yAxis: sw, label:{formatter:'初始 '+sw+' 斤', color:'#8a857a', fontSize:11, position:'insideEndBottom'}, lineStyle:{color:'#8a857a', type:'dashed', width:1} }
+          { yAxis: tw, label:{formatter:'目标 '+tw+' kg', color:'#D8A45C', fontSize:11, position:'insideEndTop'}, lineStyle:{color:'#D8A45C', type:'dashed', width:1} },
+          { yAxis: sw, label:{formatter:'初始 '+sw+' kg', color:'#8a857a', fontSize:11, position:'insideEndBottom'}, lineStyle:{color:'#8a857a', type:'dashed', width:1} }
         ] }
     }]
   });

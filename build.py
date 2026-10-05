@@ -152,7 +152,13 @@ def build_data(cfg, essays):
             _done_parts.append("%s:[%s]" % (_dk, ", ".join(js_str(x) for x in _dv)))
         else:
             _done_parts.append("%s:true" % _dk)
-    lines.append("  done: {%s}" % ", ".join(_done_parts))
+    lines.append("  done: {%s}," % ", ".join(_done_parts))
+    _rec = pl.get("records", {}) or {}
+    _rec_parts = []
+    for _rk, _rv in _rec.items():
+        _inner = ", ".join("%s:%s" % (js_str(_h), js_str(_v)) for _h, _v in _rv.items())
+        _rec_parts.append("%s:{%s}" % (_rk, _inner))
+    lines.append("  records: {%s}" % ", ".join(_rec_parts))
     lines.append("};")
     lines.append("var ESSAYS = [")
     for i, e in enumerate(essays):
@@ -172,6 +178,7 @@ def parse_plan_log(cfg):
     base = cfg.get("plan", {}) or {}
     done = dict(base.get("done", {}) or {})
     weights = dict(base.get("weights", {}) or {})
+    records = {}
     habits = []
     for h in base.get("habits", []):
         if isinstance(h, str):
@@ -180,9 +187,11 @@ def parse_plan_log(cfg):
             habits.append(h.get("name", ""))
     habits = [x for x in habits if x]
     if not os.path.exists(PLAN_LOG):
-        return done, weights
+        return done, weights, records
     cur = None
     day_done = {}
+    day_rec = {}
+    CHECK = re.compile(r"[✅✓√xX]|完成")
     for ln in read_text(PLAN_LOG).splitlines():
         t = ln.strip()
         m = re.match(r"^#+\s*第\s*(\d+)\s*天", t)
@@ -196,10 +205,14 @@ def parse_plan_log(cfg):
             weights[str(cur)] = float(v) if "." in v else int(v)
             continue
         for hname in habits:
-            if re.match(r"^[-*]?\s*" + re.escape(hname) + r"\s*[:：]?", t):
-                rest = t[t.find(hname) + len(hname):]
-                if re.search(r"[✅✓√xX]", rest) or "完成" in rest:
+            hm = re.match(r"^[-*]?\s*" + re.escape(hname) + r"\s*[:：]?\s*(.*)$", t)
+            if hm:
+                val = hm.group(1).strip()
+                if CHECK.search(val):
                     day_done.setdefault(cur, set()).add(hname)
+                elif val:
+                    day_done.setdefault(cur, set()).add(hname)
+                    day_rec.setdefault(cur, {})[hname] = val
                 break
     allset = set(habits)
     for d, st in day_done.items():
@@ -208,7 +221,9 @@ def parse_plan_log(cfg):
             done[str(d)] = True
         elif dl:
             done[str(d)] = dl
-    return done, weights
+    for d, rec in day_rec.items():
+        records[str(d)] = rec
+    return done, weights, records
 
 
 def main():
@@ -218,11 +233,12 @@ def main():
 
     cfg = json.loads(read_text(CONFIG))
 
-    # 用 plan-log.md 覆盖 plan.done / plan.weights（每天在 Typora 里更新）
-    d, w = parse_plan_log(cfg)
+    # 用 plan-log.md 覆盖 plan.done / plan.weights / plan.records（每天在 Typora 里更新）
+    d, w, r = parse_plan_log(cfg)
     _pl = dict(cfg.get("plan", {}) or {})
     _pl["done"] = d
     _pl["weights"] = w
+    _pl["records"] = r
     cfg["plan"] = _pl
 
     md_files = sorted(glob.glob(os.path.join(ESSAYS_DIR, "*.md")))
