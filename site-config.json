@@ -25,7 +25,6 @@
     "startDate": "2026-10-05",
     "habits": [
       { "name": "早起", "target": "06:00 前" },
-      { "name": "饮食", "target": "≤1800 千卡" },
       { "name": "有氧", "target": "4 km 跑步" },
       { "name": "力量", "target": "20 分钟" },
       { "name": "喝水", "target": "3000 ml" },
