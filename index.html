@@ -365,8 +365,8 @@ var PLAN = {
   startWeight: 75,
   targetWeight: 63,
   weights: {1:74},
-  done: {1:["力量", "喝水", "早睡", "早起", "有氧"]},
-  records: {1:{"早起":"6:00", "有氧":"5KM", "力量":"俯卧撑20个", "喝水":"2000ML", "早睡":"23:00"}}
+  done: {1:["力量", "喝水", "早睡", "早起", "有氧"], 2:["力量", "早起"]},
+  records: {1:{"早起":"5:10", "有氧":"徒步：14KM", "力量":"俯卧撑20个", "喝水":"3000ML", "早睡":"23:00"}, 2:{"早起":"7:10", "力量":"俯卧撑20个"}}
 };
 var ESSAYS = [
   {
@@ -536,7 +536,9 @@ function planRenderTotal(){
   if(bar) bar.style.width = pct + "%";
 }
 var PLAN_MOODS = {早起:"☀️", 饮食:"🥗", 有氧:"🏃", 力量:"💪", 喝水:"💧", 早睡:"🌙"};
-var CUTE_SRC = "images/cute-1.png";
+var CUTE_POOL = ["images/cute-1.png","images/cute-2.png","images/cute-3.png","images/cute-4.png","images/cute-5.png","images/cute-6.png","images/cute-7.png","images/cute-8.png","images/cute-9.png","images/cute-10.png","images/cute-11.png","images/cute-12.png","images/cute-13.png","images/cute-14.png","images/cute-15.png","images/cute-16.png","images/cute-17.png","images/cute-18.png","images/cute-19.png","images/cute-20.png","images/cute-21.png","images/cute-22.png","images/cute-23.png","images/cute-24.png","images/cute-25.png","images/cute-26.png","images/cute-27.png","images/cute-28.png","images/cute-29.png","images/cute-30.png","images/cute-31.png","images/cute-32.png","images/cute-33.png","images/cute-34.png","images/cute-35.png","images/cute-36.png","images/cute-37.png","images/cute-38.png","images/cute-39.png","images/cute-40.png","images/cute-41.png","images/cute-42.png","images/cute-43.png","images/cute-44.png","images/cute-45.png","images/cute-46.png","images/cute-47.png","images/cute-48.png","images/cute-49.png","images/cute-50.png","images/cute-51.png","images/cute-52.png","images/cute-53.png","images/cute-54.png","images/cute-55.png","images/cute-56.png","images/cute-57.png","images/cute-58.png","images/cute-59.png","images/cute-60.png","images/cute-61.png","images/cute-62.png","images/cute-63.png","images/cute-64.png","images/cute-65.png","images/cute-66.png","images/cute-67.png","images/cute-68.png","images/cute-69.png","images/cute-70.png","images/cute-71.png","images/cute-72.png","images/cute-73.png","images/cute-74.png","images/cute-75.png","images/cute-76.png","images/cute-77.png","images/cute-78.png","images/cute-79.png","images/cute-80.png","images/cute-81.png","images/cute-82.png","images/cute-83.png","images/cute-84.png","images/cute-85.png","images/cute-86.png","images/cute-87.png","images/cute-88.png","images/cute-89.png","images/cute-90.png","images/cute-91.png","images/cute-92.png","images/cute-93.png","images/cute-94.png","images/cute-95.png","images/cute-96.png","images/cute-97.png","images/cute-98.png","images/cute-99.png","images/cute-100.png","images/cute-101.png","images/cute-102.png","images/cute-103.png"];
+var CUTE_ORDER = [], CUTE_N = 0;
+function _shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
 function planDate(d){
   if(!PLAN.startDate) return "";
   var b = new Date(PLAN.startDate.replace(/-/g, "/"));
@@ -556,6 +558,7 @@ function planRenderRecords(){
   if(days.length === 0){ grid.innerHTML = '<div class="plan-empty">暂无打卡记录</div>'; return; }
   var html = "";
   days.forEach(function(d){
+    var cute = CUTE_ORDER[CUTE_N % CUTE_ORDER.length]; CUTE_N++;
     var dd = PLAN.done ? PLAN.done[d] : null;
     var doneAll = (dd === true);
     var doneList = doneAll ? PLAN.habits.map(function(h){return h.name;}) : (Array.isArray(dd) ? dd : []);
@@ -574,7 +577,7 @@ function planRenderRecords(){
       names += '<div class="plan-cell"><span class="ht">'+h.name+'</span><span class="plan-mood">'+(PLAN_MOODS[h.name]||"✨")+'</span></div>';
       vals += '<div class="plan-cell"><span class="htg">'+disp+'</span><span class="check">✅</span></div>';
     });
-    html += '<div class="plan-day'+(isToday?' today':'')+(doneAll?' done':'')+'"><div class="plan-daynum"><span>第 '+d+' 天 · '+planDate(d)+'</span><span class="ptags">'+tags+'</span></div><div class="plan-cols"><div class="plan-names">'+names+'</div><div class="plan-cute"><img src="'+CUTE_SRC+'" alt="治愈小插画" loading="lazy"></div><div class="plan-vals">'+vals+'</div></div></div>';
+    html += '<div class="plan-day'+(isToday?' today':'')+(doneAll?' done':'')+'"><div class="plan-daynum"><span>第 '+d+' 天 · '+planDate(d)+'</span><span class="ptags">'+tags+'</span></div><div class="plan-cols"><div class="plan-names">'+names+'</div><div class="plan-cute"><img src="'+cute+'" alt="治愈小插画" loading="lazy"></div><div class="plan-vals">'+vals+'</div></div></div>';
   });
   grid.innerHTML = html;
 }
@@ -617,7 +620,7 @@ function planRenderChart(){
 function initPlan(){
   if(!document.getElementById("planGrid")) return;
   document.getElementById("planDesc").textContent = PLAN.title + "：每天计划「" + PLAN.habits.map(function(h){return h.name + (h.target ? " " + h.target : "");}).join(" / ") + "」。";
-  CUTE_SRC = ["images/cute-1.png","images/cute-2.png","images/cute-3.png","images/cute-4.png","images/cute-5.png","images/cute-6.png","images/cute-7.png","images/cute-8.png","images/cute-9.png","images/cute-10.png","images/cute-11.png","images/cute-12.png","images/cute-13.png","images/cute-14.png","images/cute-15.png","images/cute-16.png","images/cute-17.png","images/cute-18.png","images/cute-19.png","images/cute-20.png","images/cute-21.png","images/cute-22.png","images/cute-23.png"][Math.floor(Math.random()*23)];
+  CUTE_ORDER = _shuffle(CUTE_POOL.slice()); CUTE_N = 0;
   planRenderTotal(); planRenderRecords(); planRenderChart();
   window.addEventListener("resize", function(){ var b=document.getElementById("planChart"); if(b && b._chart) b._chart.resize(); });
 }
