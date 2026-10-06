@@ -191,6 +191,9 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
 .plan-cell .plan-mood{font-size:14px;opacity:.75;line-height:1}
 .plan-cell .htg{font-size:12px;color:var(--faint);letter-spacing:.3px;white-space:nowrap}
 .plan-cell .ht{color:var(--accent)}
+.plan-cell.undone .ht{color:var(--faint)}
+.plan-cell.undone .plan-mood{opacity:.35}
+.plan-cell.undone .htg{color:var(--faint)}
 .plan-cell .check{font-size:13px;line-height:1;color:var(--accent);font-weight:700}
 .plan-day.done{border-color:var(--accent)}
 .plan-daynum .ptags{display:inline-flex;gap:6px}
@@ -571,11 +574,11 @@ function planRenderRecords(){
     if(w) tags += '<span class="plan-recweight">体重 '+w+' kg</span>';
     var names = "", vals = "";
     PLAN.habits.forEach(function(h){
-      if(doneList.indexOf(h.name) < 0) return;
+      var done = (doneList.indexOf(h.name) >= 0);
       var rec = (PLAN.records && PLAN.records[d] && PLAN.records[d][h.name]) ? PLAN.records[d][h.name] : "";
-      var disp = rec ? rec : (h.target || "");
-      names += '<div class="plan-cell"><span class="ht">'+h.name+'</span><span class="plan-mood">'+(PLAN_MOODS[h.name]||"✨")+'</span></div>';
-      vals += '<div class="plan-cell"><span class="htg">'+disp+'</span><span class="check">✅</span></div>';
+      var disp = done ? (rec ? rec : (h.target || "")) : "";
+      names += '<div class="plan-cell'+(done?'':' undone')+'"><span class="ht">'+h.name+'</span><span class="plan-mood">'+(PLAN_MOODS[h.name]||"✨")+'</span></div>';
+      vals += '<div class="plan-cell'+(done?'':' undone')+'"><span class="htg">'+disp+'</span>'+(done?'<span class="check">✅</span>':'')+'</div>';
     });
     html += '<div class="plan-day'+(isToday?' today':'')+(doneAll?' done':'')+'"><div class="plan-daynum"><span>第 '+d+' 天 · '+planDate(d)+'</span><span class="ptags">'+tags+'</span></div><div class="plan-cols"><div class="plan-names">'+names+'</div><div class="plan-cute"><img src="'+cute+'" alt="治愈小插画" loading="lazy"></div><div class="plan-vals">'+vals+'</div></div></div>';
   });
