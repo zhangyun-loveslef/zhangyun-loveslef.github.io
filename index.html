@@ -308,6 +308,10 @@ footer{border-top:1px solid var(--hairline);margin-top:40px}
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#D8A45C" stroke-width="1.6"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12 12 0 0 0-6.2 0C6.5 2.6 5.4 2.9 5.4 2.9a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.3c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg>
         <span><div class="label">GitHub</div><div class="value" id="githubValue">github.com/你的用户名</div></span>
       </a>
+      <a class="contact-card" id="cardDouyin" href="#contact">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#D8A45C" stroke-width="1.6"><path d="M9 18V5l12-2v13"/><circle cx="6.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="16.5" r="2.5"/></svg>
+        <span><div class="label">抖音 Douyin</div><div class="value" id="douyinValue">v.douyin.com/你的主页</div></span>
+      </a>
     </div>
   </section>
 </main>
@@ -346,7 +350,8 @@ var PROFILE = {
 };
 var CONTACT = {
   email: "best_izy@163.com",
-  github: "github.com/zhangyun-loveslef"
+  github: "github.com/zhangyun-loveslef",
+  douyin: "https://v.douyin.com/OQEgSj7I_Tw/"
 };
 var ABOUT = {
   desc: "大大方方，真诚坦荡。简简单单，不留遗憾",
@@ -483,6 +488,13 @@ function setContact(){
   document.getElementById("cardGithub").href = "https://"+CONTACT.github;
   if(!CONTACT.email) document.getElementById("cardEmail").style.display = "none";
   if(!CONTACT.github) document.getElementById("cardGithub").style.display = "none";
+  var cd = document.getElementById("cardDouyin");
+  if(cd){
+    var dv = document.getElementById("douyinValue");
+    if(dv) dv.textContent = (CONTACT.douyin || "").replace(/^https?:\/\//,"");
+    cd.href = CONTACT.douyin || "#contact";
+    if(!CONTACT.douyin) cd.style.display = "none";
+  }
   var se = document.getElementById("sideEmail");
   if(se){ se.href = "mailto:"+CONTACT.email; document.getElementById("sideEmailTxt").textContent = CONTACT.email || "邮箱"; }
   var sg = document.getElementById("sideGithub");
