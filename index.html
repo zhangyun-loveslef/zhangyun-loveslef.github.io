@@ -363,13 +363,13 @@ var ABOUT = {
 };
 var PLAN = {
   title: "100天重启人生计划（75KG→63kg）",
-  startDate: "2026-10-05",
+  startDate: "2026-10-06",
   habits: [{name:"早起",target:"06:00 前"}, {name:"有氧",target:"4 km 跑步"}, {name:"力量",target:"20 分钟"}, {name:"喝水",target:"3000 ml"}, {name:"早睡",target:"23:00 前"}],
   startWeight: 75,
   targetWeight: 63,
-  weights: {1:74},
-  done: {1:true, 2:["力量", "早起", "有氧"]},
-  records: {1:{"早起":"5:10", "有氧":"徒步14KM", "力量":"俯卧撑20个", "喝水":"3000ML", "早睡":"23:00"}, 2:{"早起":"7:10", "有氧":"跳绳1500个", "力量":"俯卧撑20个"}}
+  weights: {1:74, 2:73.6},
+  done: {1:true, 2:true},
+  records: {1:{"早起":"5:10", "有氧":"徒步14KM", "力量":"俯卧撑20个", "喝水":"3000ML", "早睡":"23:00"}, 2:{"早起":"7:10", "有氧":"跳绳1500个", "力量":"俯卧撑20个", "喝水":"3000ML", "早睡":"23:00"}}
 };
 var ESSAYS = [
   {
@@ -534,7 +534,8 @@ function planRenderTotal(){
     else if(Array.isArray(dd) && dd.length>0){ habitDone += dd.length; if(dd.length===PLAN.habits.length) dayFull++; }
   }
   var sD = document.getElementById("planStatDays"), sH = document.getElementById("planStatHabits"), bar = document.getElementById("planBarFill");
-  if(sD) sD.textContent = "体重 " + cur + " kg · 已减 " + lost + "/" + total + " kg";
+  var curD = Math.round(cur*10)/10, lostD = Math.round(lost*10)/10;
+  if(sD) sD.textContent = "体重 " + curD + " kg · 已减 " + lostD + "/" + total + " kg";
   if(sH) sH.textContent = "目标 " + tw + " kg · " + pct + "% · 已完成 " + dayFull + "/100 天";
   if(bar) bar.style.width = pct + "%";
 }
@@ -567,8 +568,8 @@ function planRenderRecords(){
     var doneList = doneAll ? PLAN.habits.map(function(h){return h.name;}) : (Array.isArray(dd) ? dd : []);
     var w = PLAN.weights ? PLAN.weights[d] : null;
     var isToday = (d===today);
+    var dayTitle = isToday ? '第一天' : ('第 '+d+' 天 · '+planDate(d));
     var tags = "";
-    if(isToday) tags += '<span class="plan-todaytag">今天</span>';
     if(doneAll) tags += '<span class="plan-donebadge">✅ 已完成</span>';
     else if(doneList.length>0) tags += '<span class="plan-donebadge part">'+doneList.length+'/'+PLAN.habits.length+'</span>';
     if(w) tags += '<span class="plan-recweight">体重 '+w+' kg</span>';
@@ -580,7 +581,7 @@ function planRenderRecords(){
       names += '<div class="plan-cell'+(done?'':' undone')+'"><span class="ht">'+h.name+'</span><span class="plan-mood">'+(PLAN_MOODS[h.name]||"✨")+'</span></div>';
       vals += '<div class="plan-cell'+(done?'':' undone')+'"><span class="htg">'+disp+'</span>'+(done?'<span class="check">✅</span>':'')+'</div>';
     });
-    html += '<div class="plan-day'+(isToday?' today':'')+(doneAll?' done':'')+'"><div class="plan-daynum"><span>第 '+d+' 天 · '+planDate(d)+'</span><span class="ptags">'+tags+'</span></div><div class="plan-cols"><div class="plan-names">'+names+'</div><div class="plan-cute"><img src="'+cute+'" alt="治愈小插画" loading="lazy"></div><div class="plan-vals">'+vals+'</div></div></div>';
+    html += '<div class="plan-day'+(isToday?' today':'')+(doneAll?' done':'')+'"><div class="plan-daynum"><span>'+dayTitle+'</span><span class="ptags">'+tags+'</span></div><div class="plan-cols"><div class="plan-names">'+names+'</div><div class="plan-cute"><img src="'+cute+'" alt="治愈小插画" loading="lazy"></div><div class="plan-vals">'+vals+'</div></div></div>';
   });
   grid.innerHTML = html;
 }
