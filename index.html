@@ -606,22 +606,22 @@ function planRenderChart(){
   var ymin = Math.floor((wmin - pad) * 10) / 10, ymax = Math.ceil((wmax + pad) * 10) / 10;
   box._chart.setOption({
     animation:false,
-    grid:{left:48,right:20,top:30,bottom:30},
+    grid:{left:48,right:20,top:38,bottom:30},
     tooltip:{trigger:'axis', backgroundColor:'#221f1a', borderColor:'#3a3630', textStyle:{color:'#e9e4da', fontSize:12},
-      formatter:function(p){ return '第 '+p[0].value[0]+' 天 &nbsp;·&nbsp; '+p[0].value[1]+' kg'; }},
+      formatter:function(p){ return p[0].name+' &nbsp;·&nbsp; '+p[0].value+' kg'; }},
     xAxis:{ type:'category', data: pts.map(function(p){return '第'+p[0]+'天';}),
       axisLabel:{color:'#9a958c', fontSize:11}, axisLine:{lineStyle:{color:'#3a3630'}}, axisTick:{show:false} },
     yAxis:{ type:'value', min: ymin, max: ymax, name:'kg', nameTextStyle:{color:'#9a958c', fontSize:11, padding:[0,0,0,-30]},
       axisLabel:{color:'#9a958c', fontSize:11}, splitLine:{lineStyle:{color:'#2c2822'}} },
     series:[{
-      type:'line', smooth:true, symbolSize:7, data: pts,
+      type:'line', smooth:true, symbolSize:7, data: pts.map(function(p){return p[1];}),
+      label:{ show:true, formatter:function(p){ return p.value+' kg'; }, color:'#e9e4da', fontSize:11, position:'top' },
       lineStyle:{ width:2.5, color:'#D8A45C' },
       itemStyle:{ color:'#D8A45C' },
       areaStyle:{ color:'rgba(216,164,92,0.12)' },
       markLine:{ silent:true, symbol:'none',
         data:[
-          { yAxis: tw, label:{formatter:'目标 '+tw+' kg', color:'#D8A45C', fontSize:11, position:'insideEndTop'}, lineStyle:{color:'#D8A45C', type:'dashed', width:1} },
-          { yAxis: sw, label:{formatter:'初始 '+sw+' kg', color:'#8a857a', fontSize:11, position:'insideEndBottom'}, lineStyle:{color:'#8a857a', type:'dashed', width:1} }
+          { yAxis: tw, label:{formatter:'目标 '+tw+' kg', color:'#D8A45C', fontSize:11, position:'insideEndTop'}, lineStyle:{color:'#D8A45C', type:'dashed', width:1} }
         ] }
     }]
   });
