@@ -600,6 +600,10 @@ function planRenderChart(){
   if(typeof echarts === 'undefined'){ box.innerHTML = '<div class="plan-chart-empty">图表组件加载失败，请检查网络。</div>'; return; }
   if(!box._chart) box._chart = echarts.init(box);
   var sw = PLAN.startWeight || 150, tw = PLAN.targetWeight || 126;
+  var wmin = sw, wmax = sw;
+  for(var dd=1; dd<=100; dd++){ if(PLAN.weights && PLAN.weights[dd]){ wmin = Math.min(wmin, PLAN.weights[dd]); wmax = Math.max(wmax, PLAN.weights[dd]); } }
+  var pad = Math.max(0.5, (wmax - wmin) * 0.15);
+  var ymin = Math.floor((wmin - pad) * 10) / 10, ymax = Math.ceil((wmax + pad) * 10) / 10;
   box._chart.setOption({
     animation:false,
     grid:{left:48,right:20,top:30,bottom:30},
@@ -607,7 +611,7 @@ function planRenderChart(){
       formatter:function(p){ return '第 '+p[0].value[0]+' 天 &nbsp;·&nbsp; '+p[0].value[1]+' kg'; }},
     xAxis:{ type:'category', data: pts.map(function(p){return '第'+p[0]+'天';}),
       axisLabel:{color:'#9a958c', fontSize:11}, axisLine:{lineStyle:{color:'#3a3630'}}, axisTick:{show:false} },
-    yAxis:{ type:'value', min: Math.floor(tw-2), max: Math.ceil(sw+2), name:'kg', nameTextStyle:{color:'#9a958c', fontSize:11, padding:[0,0,0,-30]},
+    yAxis:{ type:'value', min: ymin, max: ymax, name:'kg', nameTextStyle:{color:'#9a958c', fontSize:11, padding:[0,0,0,-30]},
       axisLabel:{color:'#9a958c', fontSize:11}, splitLine:{lineStyle:{color:'#2c2822'}} },
     series:[{
       type:'line', smooth:true, symbolSize:7, data: pts,
